@@ -1,8 +1,8 @@
 {
-  "name": "Start on Heroku: Python",
-  "description": "A barebones Python app, which can easily be deployed to Heroku.",
+  "name": "everytian",
+  "description": "Daily Chinese Practice",
   "image": "heroku/python",
-  "repository": "https://github.com/heroku/python-getting-started",
-  "keywords": ["python", "django" ],
+  "repository": "https://git.heroku.com/everytian",
+  "keywords": ["chinese", "reading", "practice", "everyday", "daily" ],
   "addons": [ "heroku-postgresql" ]
 }
