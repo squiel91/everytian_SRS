@@ -1,5 +1,8 @@
 from django.db import models
+from mongoengine import *
 
-# Create your models here.
-class Greeting(models.Model):
-    when = models.DateTimeField('date created', auto_now_add=True)
+class User(Document):
+	email = StringField(required=True)
+	first_name = StringField(max_length=50)
+	last_name = StringField(max_length=50)
+
