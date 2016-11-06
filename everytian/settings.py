@@ -1,3 +1,7 @@
+import sys
+import pdb
+
+
 """
 Django settings for everytian project, on Heroku. For more info, see:
 https://github.com/heroku/heroku-django-template
@@ -81,8 +85,15 @@ DATABASES = {
     }
 }
 
+RUNNING_LOCALLY = (len(sys.argv) > 1 and (sys.argv[1] == 'runserver' or sys.argv[1] == 'shell'))
+
 from mongoengine import connect
-connect('heroku_pvd3l442', host="mongodb://heroku_pvd3l442:rnr1op6ujprdvshs45no011g39@ds145997.mlab.com:45997/heroku_pvd3l442")
+# import pdb
+# pdb.set_trace()
+if RUNNING_LOCALLY:
+    connect('everytian')
+else:
+    connect(host="mongodb://heroku_pvd3l442:rnr1op6ujprdvshs45no011g39@ds145997.mlab.com:45997/heroku_pvd3l442")    
 
 # SESSION_ENGINE = 'mongoengine.django.sessions'
 # SESSION_SERIALIZER = 'mongoengine.django.sessions.BSONSerializer'
