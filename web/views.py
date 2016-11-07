@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import User, Word
+from .models import User, Word, Text
 from random import randint
 import pdb
 
@@ -11,12 +11,12 @@ def index(request):
 
 def resource(request):
 	# pdb.set_trace()
-	position = randint(1, Word.objects.count()) - 1
-	word = Word.objects.all()[position]
+	position = randint(1, Text.objects.count()) - 1
+	text = Text.objects.all()[position]
 	return render(request, 'resource.html', {
-		"hanzi": word.hanzi,
-		"pinyin": word.pinyin,
-		"definitions": word.definitions
+		"text": text.text,
+		"word_definitions": text.definitions_to_json(),
+		"translation": text.translation,
 	})
 
 # Create your views here.

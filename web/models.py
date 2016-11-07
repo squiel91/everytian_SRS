@@ -18,6 +18,33 @@ class Word(Document):
 	def __str__(self):
 		return self.hanzi
 
+class Text(Document):
+	text = ListField(StringField(), required=True)
+	translation = StringField()
+
+	def __str__(self):
+		return "".join(self.text)
+
+	def definitions(self):
+		list_words = list()
+		for word_text in self.text:
+			try:
+				list_words.append(Word.objects.get(pk=word_text))
+			except Word.DoesNotExist:
+				pass
+		return list_words
+
+	def definitions_to_json(self):
+		dict_words = {}
+		for word_text in self.text:
+			try:
+				word = Word.objects.get(pk=word_text)
+				dict_words[word.hanzi] = { "pinyin": word.pinyin, "definitions": word.definitions}
+			except Word.DoesNotExist:
+				pass
+		return dict_words
+
+
 
 # from django.db import models
 # import pdb

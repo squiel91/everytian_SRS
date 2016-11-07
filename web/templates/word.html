@@ -1,0 +1,13 @@
+{% block content %}
+
+<h1>{{ hanzi }}</h1>
+<h2>{{ pinyin }}</h2>
+<ul>
+	{% for definition in definitions %}
+		<li>{{ definition }}</li>
+	{% endfor %}
+</ul>
+
+<a href="{% url 'resource' %}">Revise other random word</a>
+
+{% endblock %}

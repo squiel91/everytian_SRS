@@ -1,13 +1,98 @@
 {% block content %}
 
-<h1>{{ hanzi }}</h1>
-<h2>{{ pinyin }}</h2>
-<ul>
-	{% for definition in definitions %}
-		<li>{{ definition }}</li>
-	{% endfor %}
-</ul>
+<style>
 
-<a href="{% url 'resource' %}">Revise other random word</a>
+	.word {
+		font-size: 30pt;
+		display: inline;
+	}
+
+	.unknown {
+		border-bottom: 4px solid #e74c3c;
+	}
+
+	.explain-box {
+		border-top: 2px solid #bdc3c7;
+		margin-top: 5px;
+		position: fixed;
+    	bottom: 0;
+    	width: 100%;
+
+	}
+
+	.explain-box .pronunciation {
+		font-size: 15pt;
+	}
+
+	.explain-box .definition {
+		font-size: 13pt;
+		list-style: none;
+		margin-top: 20px;
+	    padding: 0;
+	}
+
+	.actions {
+		margin-top: 40px;
+	}
+
+	#translation {
+		display: none;
+		font-size: 15pt;
+		margin-top: 15pt;
+		margin-bottom: 15pt;
+	}
+
+</style>
+<section class="text">
+	{% for word in text %}
+		<span class="word">{{ word }}</span>
+	{% endfor %}
+</section>
+<section class="explain-box">
+	<div class="word"></div>
+	<div class="pronunciation"></div>
+	<ul class="definition"></ul>
+</section>
+<section class="actions">
+<button id="translate">Show translation</button>
+<a href="{% url 'resource' %}"><button>Revise other random text</button></a>
+</section>
+<div id="translation">{{ translation }}</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+	{% autoescape off %}
+	var dict = {{ word_definitions }};
+	{% endautoescape %}
+
+	function explain(word, pronunciation, definitions){
+		$( ".explain-box .word" ).text(word);
+		$( ".explain-box .pronunciation" ).text(pronunciation);
+		def_list = $( ".explain-box .definition" ).empty();
+		for(var i = 0; i < definitions.length; i++){
+			def_list.append("<li>" + definitions[i] + "</li>");	
+		}
+	}
+
+	$( ".word" ).click(function(event) {
+	  touched_word = $(this).text()
+	  if(touched_word in dict) {
+	  	word_dict = dict[touched_word];
+
+	  	explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
+	  	$(this).toggleClass( "unknown" )
+	  }
+	});
+
+	$( "#translate" ).click(function(event) {
+	  if(event.target.innerHTML == 'Show translation') {
+	  	$("#translation").show();
+	  	event.target.innerHTML = "Hide translation";
+	  } else {
+	  	$("#translation").hide();
+	  	event.target.innerHTML = 'Show translation';
+	  }
+	});
+
+</script>
 
 {% endblock %}
