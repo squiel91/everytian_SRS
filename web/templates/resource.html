@@ -73,13 +73,34 @@
 		}
 	}
 
+	var last_touched="";
+
+	function clear_explain(){
+		$( ".explain-box .word" ).empty();
+		$( ".explain-box .pronunciation" ).empty();
+		$( ".explain-box .definition" ).empty();
+	}
+
 	$( ".word" ).click(function(event) {
 	  touched_word = $(this).text()
 	  if(touched_word in dict) {
-	  	word_dict = dict[touched_word];
-
-	  	explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
-	  	$(this).toggleClass( "unknown" )
+	  	if (last_touched == touched_word){
+	  		if ($(this).hasClass( "unknown" )){
+	  			$(this).removeClass( "unknown" );
+	  			clear_explain();
+	  		} else {
+	  			word_dict = dict[touched_word];
+	  			explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
+	  			$(this).addClass( "unknown" );
+	  		}
+	  	} else {
+	  		word_dict = dict[touched_word];
+	  		explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
+	  		if (!$(this).hasClass("unknown")){
+	  			$(this).addClass("unknown");
+	  		}
+	  	};
+	  	last_touched = touched_word;
 	  }
 	});
 
