@@ -17,6 +17,8 @@ def resource(request):
 		"text": text.text,
 		"word_definitions": text.definitions_to_json(),
 		"translation": text.translation,
+		"audio": text.audio,
+		
 	})
 
 # Create your views here.

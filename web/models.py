@@ -21,6 +21,7 @@ class Word(Document):
 class Text(Document):
 	text = ListField(StringField(), required=True)
 	translation = StringField()
+	audio = IntField()
 
 	def __str__(self):
 		return "".join(self.text)
