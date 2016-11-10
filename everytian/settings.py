@@ -54,6 +54,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
 )
 
+import pdb
+# pdb.set_trace()
+
+
+SESSION_ENGINE = 'django_mongoengine.sessions'
+SESSION_SERIALIZER = 'django_mongoengine.sessions.BSONSerializer'
+
 ROOT_URLCONF = 'everytian.urls'
 
 TEMPLATES = [

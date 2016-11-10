@@ -44,6 +44,7 @@
 	}
 
 </style>
+<div style="float:right;">Hello {{ user }}!(<a href="{% url 'logout' %}">logout</a>)</div>
 {% if audio > 0 %}
 <audio controls autoplay>
   <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">

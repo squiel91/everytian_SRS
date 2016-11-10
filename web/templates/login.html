@@ -1,0 +1,16 @@
+{% block content %}
+
+<h1>everytiān</h1>
+<h2>Login</h2>
+
+<div class="error" style="color: red;">{{ error }}</div>
+<form method="Post" action="{% url 'login' %}">
+	{% csrf_token %}
+	<input type="text" placeholder="Your email" name="email"><br>
+	<input type="password" placeholder="Password" name="password"><br>
+	<input type="submit" value="Submit">
+</form>
+
+<a href="{% url 'register' %}">Register</a> if you don't have an account.
+
+{% endblock %}

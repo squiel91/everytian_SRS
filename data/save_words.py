@@ -1,7 +1,7 @@
 from web.models import Word
 import json
 
-words = json.load(open('data/cedict.json'))
+words = json.load(open('data/cedict_new.json'))
 
 for word in words:
 	Word.objects.create(
