@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import User, Word, Text
+from .models import User, Word, Text, Knowledge
 from random import randint
 import pdb
 
@@ -68,10 +68,33 @@ def practice(request):
 
 	if request.method == "POST":
 		# pdb.set_trace()
-		fav = Text.objects.get(pk=request.POST["resource_id"])
-		user.resource_history.append(fav)
+		resource = Text.objects.get(pk=request.POST["resource_id"])
+		all_words = set(resource.text)
+		unknown_words = set(request.POST.getlist("unknown"))
+		known_words = all_words - unknown_words
+		
+		for known_word in known_words:
+			try:
+				word = Word.objects.get(pk=known_word)
+				try:
+					Knowledge.objects.get(word=known_word, user=user).update(known=True)
+				except Knowledge.DoesNotExist:
+					Knowledge.objects.create(word=known_word, user=user, known=True)
+			except Word.DoesNotExist:
+				pass
+		for unknown_word in unknown_words:
+			try:
+				word = Word.objects.get(pk=unknown_word)
+				try:
+					Knowledge.objects.get(word=unknown_word, user=user).update(known=False)
+				except Knowledge.DoesNotExist:
+					Knowledge.objects.create(word=unknown_word, user=user, known=False)
+			except Word.DoesNotExist:
+				pass
+				
+		user.resource_history.append(resource)
 		if request.POST.get("favorite") == "on":
-			user.favorite_resources.append(fav)
+			user.favorite_resources.append(resource)
 		user.save()
 
 

@@ -118,6 +118,7 @@
 			<section class="text">
 				{% for word in text %}
 					<span class="word">{{ word }}</span>
+					<input name="unknown" type="checkbox" value="{{ word }}" class="hidden">
 				{% endfor %}
 				<div id="translation">{{ translation }}</div>
 			</section>
@@ -159,17 +160,20 @@
 			  	if (last_touched == touched_word){
 			  		if ($(this).hasClass( "unknown" )){
 			  			$(this).removeClass( "unknown" );
+			  			$(this).next().prop('checked', false);
 			  			clear_explain();
 			  		} else {
 			  			word_dict = dict[touched_word];
 			  			explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
 			  			$(this).addClass( "unknown" );
+			  			$(this).next().prop('checked', true);
 			  		}
 			  	} else {
 			  		word_dict = dict[touched_word];
 			  		explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
 			  		if (!$(this).hasClass("unknown")){
 			  			$(this).addClass("unknown");
+			  			$(this).next().prop('checked', true);
 			  		}
 			  	};
 			  	last_touched = touched_word;

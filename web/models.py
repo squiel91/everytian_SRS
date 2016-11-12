@@ -53,3 +53,12 @@ class User(Document):
 
 	def __str__(self):
 		return self.email
+
+class Knowledge(Document):
+	user = ReferenceField(User)
+	word =  ReferenceField(Word)
+	known = BooleanField()
+	
+	def __str__(self):
+		state = "knowns" if self.known else "unknowns"
+		return "{} {} {}".format(user, state, word)
