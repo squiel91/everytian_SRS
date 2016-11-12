@@ -3,6 +3,7 @@
 <h1>everytiān</h1>
 <h2>Register</h2>
 
+<div class="error" style="color: red;">{{ error }}</div>
 <form method="Post" action="{% url 'register' %}">
 	{% csrf_token %}
 	<input type="text" placeholder="Your email" name="email"><br>
@@ -12,7 +13,6 @@
 	<input type="radio" name="method" value="traditional" checked>Traditional<br>
 	<input type="radio" name="method" value="simplified"> Simplifed<br>
 	<select name="pronunciation">
-		<option value="invalid">Select pronunciation method</option>
 		<option value="tonal">Tonal pinyin</option>
 		<option value="numeric">Numbered pinyin</option>
 		<option value="bopomofo">BoPoMoFo</option>

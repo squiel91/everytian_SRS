@@ -6,5 +6,9 @@ urlpatterns = [
 	url(r'^register$', views.register, name='register'),
 	url(r'^login$', views.login, name='login'),
 	url(r'^logout$', views.logout, name='logout'),
-	url(r'^resource$', views.resource, name='resource'),
+	
+	url(r'^practice$', views.practice, name='practice'),
+	url(r'^favorites$', views.favorites, name='favorites'),
+	url(r'^evolution$', views.evolution, name='evolution'),
+	url(r'^settings$', views.settings, name='settings'),
 ]
