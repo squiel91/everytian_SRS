@@ -5,7 +5,6 @@ from random import randint
 import pdb
 
 
-# Create your views here.
 def index(request):
 	return render(request, 'index.html')
 
@@ -28,7 +27,7 @@ def register(request):
 			pronunciation=pronunciation
 		)
 		request.session['email'] = email
-		return redirect('resource')
+		return redirect('practice')
 
 def login(request):
 	if request.method == "GET":
@@ -44,7 +43,7 @@ def login(request):
 
 		if user.password == password:
 			request.session['email'] = email
-			return redirect('resource')
+			return redirect('practice')
 		else:
 			return render(request, 'login.html', { 
 				"error": "Password doesnt match!" })
@@ -53,22 +52,44 @@ def logout(request):
 	del request.session['email']
 	return redirect('index')
 
-def resource(request):
+def get_view_dict(resource):
+	return {
+		"resource_id": resource.id,
+		"text": resource.text,
+		"word_definitions":resource.definitions_to_json(),
+		"translation": resource.translation,
+		"audio": resource.audio,
+	}
+
+def practice(request):
 	if not request.session.get('email'):
 		return redirect('login')
 	user = User.objects.get(pk=request.session['email'])
+
+	if request.method == "POST":
+		# pdb.set_trace()
+		fav = Text.objects.get(pk=request.POST["resource_id"])
+		user.resource_history.append(fav)
+		if request.POST.get("favorite") == "on":
+			user.favorite_resources.append(fav)
+		user.save()
+
+
 	position = randint(1, Text.objects.count()) - 1
 	text = Text.objects.all()[position]
-	return render(request, 'resource.html', {
-		"user": user.name,
-		"text": text.text,
-		"word_definitions": text.definitions_to_json(),
-		"translation": text.translation,
-		"audio": text.audio,
-		
-	})
+	return render(request, 'practice.html', get_view_dict(text))
 
-# Create your views here.
-def list_users(request):
-	users = User.objects.all()
-	return render(request, 'list_users.html', {"user_emails": [user.email for user in users]})
+
+def favorites(request):
+	if not request.session.get('email'):
+		return redirect('login')
+	user = User.objects.get(pk=request.session['email'])
+	# pdb.set_trace()
+	return render(request, 'favorites.html', 
+		{"favorites": ["".join(fav.text) for fav in user.favorite_resources]})
+
+def evolution(request):
+	return render(request, 'evolution.html')
+
+def settings(request):
+	return render(request, 'settings.html')

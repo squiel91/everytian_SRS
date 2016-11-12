@@ -1,9 +1,23 @@
-{% block content %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>everytiān</title>
+		<style>
+			body {
+				background-color: #cfcf00;
+				color: white;
+				font-family: Arial;
+			}
+		</style>
+	<body>
+		<h1>everytiān</h1>
+		<h2>DAILY CHINESE PRACTICE</h2>
+		<p>
+		Daily Chinese material specially picked for you. Expand your vocabulary and improve your language understanding using what you already know.
+		</p>
 
-<h1>everytiān</h1>
-<h2>Daily Chinese Practice</h2>
-
-<a href="{% url 'register' %}">Register</a>
-<a href="{% url 'login' %}">Login</a>
-
-{% endblock %}
+		<a href="{% url 'register' %}">Register</a><br>
+		<a href="{% url 'login' %}">Login</a>
+	</body>
+</html>
