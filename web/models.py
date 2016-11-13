@@ -62,3 +62,19 @@ class Knowledge(Document):
 	def __str__(self):
 		state = "knowns" if self.known else "unknowns"
 		return "{} {} {}".format(user, state, word)
+
+	def update_status(self, known):
+		updated = None
+		if self.known:
+			if known:
+				updated = "known"
+			else:
+				updated = "forgotten"
+		else:
+			if known:
+				updated = "learned"
+			else:
+				updated = "unknown"
+		self.known = known
+		self.save()
+		return updated

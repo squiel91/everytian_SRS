@@ -92,7 +92,7 @@ DATABASES = {
     }
 }
 
-RUNNING_LOCALLY = (len(sys.argv) > 1 and (sys.argv[1] == 'runserver' or sys.argv[1] == 'shell'))
+RUNNING_LOCALLY = (len(sys.argv) > 1 and (sys.argv[1] == 'runserver'))  # or sys.argv[1] == 'shell'
 
 from mongoengine import connect
 # import pdb
@@ -158,3 +158,5 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+# SESSION_COOKIE_AGE = 60 * 60 * 24 * 30 # One month
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False

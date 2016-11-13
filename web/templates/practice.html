@@ -104,12 +104,14 @@
 					<ul>
 						<li id="favorite">Favorite</li>
 						<input name="favorite" type="checkbox" class="hidden">
-						<li id="share">Share</li>
+						<li id="share">
+							<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.everytian.com" data-text="{{ tweet }}" data-hashtags="everytian">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+						</li>
 						<li id="translate">Translate</li>
 					</ul>
 				</div>
 			</section>
-			{% if audio > 1000000 %}
+			{% if audio > 0 %}
 			<audio controls autoplay>
 			  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
 			Your browser does not support the audio element.
@@ -129,7 +131,8 @@
 			</section>
 			<input type="submit" value="Next!">
 		</form>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="../static/jquery-3.1.1.min.js"></script>
+		<script src="../static/notify.min.js"></script>
 		<script>
 			{% autoescape off %}
 			var dict = {{ word_definitions }};
@@ -201,6 +204,19 @@
 			  	$(this).text("Favorite");
 			  }
 			});
+
+			{% for learned_word in learned %}
+				$.notify("you learned {{ learned_word }}!", "success")
+			{% endfor %}
+			{% for forgotten_word in forgotten %}
+				$.notify("you forgotten {{ forgotten_word }}!", "error")
+			{% endfor %}
+			{% for discov_known_word in discov_known %}
+				$.notify("{{ discov_known_word }} added to your known dictionary", "info")
+			{% endfor %}
+			{% for discov_unknown_word in discov_unknown %}
+				$.notify("{{ discov_unknown_word }} added to your unknown dictionary", "warn")
+			{% endfor %}
 
 		</script>
 
