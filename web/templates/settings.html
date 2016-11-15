@@ -1,3 +1,19 @@
 <h1>Settings</h1>
 
 <a href="{% url 'logout' %}">Logout</a>
+
+<form method="Post" action="{% url 'register' %}">
+	{% csrf_token %}
+	<input type="text" placeholder="Your email" name="email"><br>
+	<input type="text" placeholder="Your first name" name="name"><br>
+	<input type="password" placeholder="Password" name="password"><br>
+	<input type="password" placeholder="Retype password" name="retyped_pass"><br>
+	<input type="radio" name="method" value="traditional" checked>Traditional<br>
+	<input type="radio" name="method" value="simplified"> Simplifed<br>
+	<select name="pronunciation">
+		<option value="tonal">Tonal pinyin</option>
+		<option value="numeric">Numbered pinyin</option>
+		<option value="bopomofo">BoPoMoFo</option>
+	</select><br>
+	<input type="submit" value="Update">
+</form>

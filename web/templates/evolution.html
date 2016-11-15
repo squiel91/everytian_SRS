@@ -1,1 +1,205 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>everytiān</title>
+		<style>
+			body {
+				font-family: Arial;
+			}
+		</style>
+	<body>
+
+		<style>
+
+			.word {
+				font-size: 30pt;
+				margin-right: 2px; 
+				display: inline;
+			}
+
+			.unknown {
+				border-bottom: 4px solid #e74c3c;
+			}
+
+			.explain-box {
+				border-top: 2px solid #bdc3c7;
+				margin-top: 5px;
+				position: fixed;
+		    	bottom: 0;
+		    	width: 100%;
+
+			}
+
+			.explain-box .pronunciation {
+				font-size: 15pt;
+			}
+
+			.explain-box .definition {
+				font-size: 13pt;
+				list-style: none;
+				margin-top: 20px;
+			    padding: 0;
+			}
+
+			.actions {
+				margin-top: 40px;
+			}
+
+			#translation {
+				display: none;
+				font-size: 15pt;
+				margin-top: 15pt;
+				margin-bottom: 15pt;
+			}
+
+			nav ul {
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+			}
+
+			nav ul li {
+				margin: 5px;
+				padding: 5px;
+				display: inline;
+			}
+
+			.section-actions ul {
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+				margin-top: 10px;
+			}
+
+			.section-actions ul li {
+				margin: 5px;
+				padding: 5px;
+				display: inline;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+		</style>
+
+		<nav>
+			<div id="top-level">
+				<ul>
+					<li>everytiān</li>
+					<li><a href="{% url 'practice' %}">Practice</a></li>
+					<li><a href="{% url 'favorites' %}">Favorites</a></li>
+					<li><a href="{% url 'evolution' %}">Evolution</a></li>
+					<li><a href="{% url 'settings' %}">Settings</a></li>
+				</ul>
+
+			</div>
+		</nav>  
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(draw_known_unknown_chart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function draw_known_unknown_chart() {
+
+        // Create the data table.
+        var data_known_unknown = new google.visualization.DataTable();
+        data_known_unknown.addColumn('number', 'Text');
+        data_known_unknown.addColumn('number', 'Known');
+        data_known_unknown.addColumn('number', 'Unknown');
+        data_known_unknown.addRows([
+        {% for record in known_unknown %}
+			{{ record }},
+		{% endfor %}
+        ]);
+
+        var data_HSK = new google.visualization.DataTable();
+        data_HSK.addColumn('number', 'HSK');
+        data_HSK.addColumn('number', 'Total');
+        data_HSK.addColumn('number', 'Known');
+        data_HSK.addRows([
+        {% for record in HSK %}
+			{{ record }},
+		{% endfor %}
+        ]);
+
+		var data_learned_forgotten = new google.visualization.DataTable();
+        data_learned_forgotten.addColumn('number', 'Text');
+        data_learned_forgotten.addColumn('number', 'Learned');
+        data_learned_forgotten.addColumn('number', 'Forgotten');
+        data_learned_forgotten.addRows([
+        {% for record in HSK %}
+			{{ record }},
+		{% endfor %}
+        ]);
+
+		var data_dicov_known_unknown = new google.visualization.DataTable();
+        data_dicov_known_unknown.addColumn('number', 'Text');
+        data_dicov_known_unknown.addColumn('number', 'Discovered known');
+        data_dicov_known_unknown.addColumn('number', 'Discovered Unknown');
+        data_dicov_known_unknown.addRows([
+        {% for record in dicov_known_unknown %}
+			{{ record }},
+		{% endfor %}
+        ]);
+
+        // Set chart options
+        var options_known_unknown = {
+        	'title':'Known and Unknown',
+			'width':500,
+			'height':300,
+			'hAxis': {'format': '#'},
+            'legend': { 'position': 'bottom' }
+        };
+        var options_HSK = {
+        	'title':'HSK vocabulary',
+			'width':500,
+			'height':300,
+			'hAxis': {'format': '#'},
+            'legend': { 'position': 'bottom' }
+        };
+		var options_learned_forgotten = {
+        	'title':'Learned and Forgotten',
+			'width':500,
+			'height':300,
+			'hAxis': {'format': '#'},
+            'legend': { 'position': 'bottom' }
+        };
+		var options_discov_known_unknown = {
+        	'title':'Discovered Known and Unknown',
+			'width':500,
+			'height':300,
+			'hAxis': {'format': '#'},
+            'legend': { 'position': 'bottom' }
+        };
+
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart_known_unknown = new google.visualization.LineChart(document.getElementById('known_unknown_chart_div'));
+        var chart_HSK = new google.visualization.ColumnChart(document.getElementById('HSK_chart_div'));
+        var chart_learned_forgotten = new google.visualization.LineChart(document.getElementById('learned_forgotten_chart_div'));
+        var chart_dicov_known_unknown = new google.visualization.LineChart(document.getElementById('dicov_known_unknown_chart_div'));
+        chart_known_unknown.draw(data_known_unknown, options_known_unknown);
+        chart_HSK.draw(data_HSK, options_HSK);
+        chart_learned_forgotten.draw(data_learned_forgotten, options_learned_forgotten);
+        chart_dicov_known_unknown.draw(data_dicov_known_unknown, options_discov_known_unknown);
+      }
+    </script>
+
 <h1>Evolution</h1>
+    <div id="known_unknown_chart_div"></div>
+    <div id="HSK_chart_div"></div>
+    <div id="learned_forgotten_chart_div"></div>
+    <div id="dicov_known_unknown_chart_div"></div>
+
+
+	</body>
+</html>

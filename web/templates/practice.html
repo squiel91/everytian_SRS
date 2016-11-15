@@ -12,13 +12,37 @@
 
 		<style>
 
-			.word {
+			.text .word {
 				font-size: 30pt;
 				margin-right: 2px; 
-				display: inline;
+				height: 65pt;
+				float: left;
+			}
+
+			.explain-box .word {
+				font-size: 30pt;
+				margin-right: 2px; 
+				height: 50pt;
+			}
+
+			.text .word .hanzi{
+				font-size: 30pt;
+				margin-top: 0pt; 
+				display: block;
+			}
+
+			.text .word .pronunciation{
+				margin: auto;
+				text-align: center;
+				color: red;
+				margin-top: 5pt;
+				font-size: 10pt;
+				display: block;
 			}
 
 			.unknown {
+				/* color: red;
+				font-weight: bold;*/
 				border-bottom: 4px solid #e74c3c;
 			}
 
@@ -26,6 +50,7 @@
 				border-top: 2px solid #bdc3c7;
 				margin-top: 5px;
 				position: fixed;
+				background-color: white;
 		    	bottom: 0;
 		    	width: 100%;
 
@@ -49,7 +74,9 @@
 			#translation {
 				display: none;
 				font-size: 15pt;
-				margin-top: 15pt;
+				float: left;
+				clear: left;
+				margin-top: 0pt;
 				margin-bottom: 15pt;
 			}
 
@@ -80,6 +107,37 @@
 
 			.hidden {
 				display: none;
+			}
+
+			#next {
+				margin-top: 20pt;
+				float: left;
+				clear: both;
+				outline: none;
+			  -webkit-border-radius: 4;
+			  -moz-border-radius: 4;
+			  border-radius: 4px;
+			  font-family: Arial;
+			  color: #ecf0f1;
+			  font-size: 20px;
+			  background-color: white;
+			  padding: 10px 20px 10px 20px;
+			  border: solid #ecf0f1 2px;
+			  text-decoration: none;
+			}
+
+			#next:hover {
+			  color: #bdc3c7;
+			  border: solid #bdc3c7 2px;
+			  text-decoration: none;
+
+			}
+
+			#next:active {
+			  color: #bdc3c7;
+			  border: solid #bdc3c7 2px;
+			  text-decoration: none;
+
 			}
 
 		</style>
@@ -114,13 +172,16 @@
 			{% if audio > 0 %}
 			<audio controls autoplay>
 			  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
-			Your browser does not support the audio element.
+			Your browser does not support audio!
 			</audio>
 			{% endif %}
 			<section class="text">
 				{% for word in text %}
-					<span class="word">{{ word }}</span>
-					<input name="unknown" type="checkbox" value="{{ word }}" class="hidden">
+					<div class="word">
+						<div class="hanzi">{{ word.hanzi }}</div>
+						<input name="unknown" type="checkbox" value="{{ word.hanzi }}" class="hidden">
+						<div class="pronunciation" style="display: none;">{{ word.pinyin }}</div>
+					</div>
 				{% endfor %}
 				<div id="translation">{{ translation }}</div>
 			</section>
@@ -129,7 +190,7 @@
 				<div class="pronunciation"></div>
 				<ul class="definition"></ul>
 			</section>
-			<input type="submit" value="Next!">
+			<input id="next" type="submit" value="NEXT">
 		</form>
 		<script src="../static/jquery-3.1.1.min.js"></script>
 		<script src="../static/notify.min.js"></script>
@@ -157,26 +218,26 @@
 				$( ".explain-box .definition" ).empty();
 			}
 
-			$( ".word" ).click(function(event) {
+			$( ".hanzi" ).click(function(event) {
 			  touched_word = $(this).text()
 			  if(touched_word in dict) {
 			  	if (last_touched == touched_word){
 			  		if ($(this).hasClass( "unknown" )){
 			  			$(this).removeClass( "unknown" );
-			  			$(this).next().prop('checked', false);
+			  			$(this).next().prop('checked', false).next().hide();
 			  			clear_explain();
 			  		} else {
 			  			word_dict = dict[touched_word];
 			  			explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
 			  			$(this).addClass( "unknown" );
-			  			$(this).next().prop('checked', true);
+			  			$(this).next().prop('checked', true).next().show();
 			  		}
 			  	} else {
 			  		word_dict = dict[touched_word];
 			  		explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
 			  		if (!$(this).hasClass("unknown")){
 			  			$(this).addClass("unknown");
-			  			$(this).next().prop('checked', true);
+			  			$(this).next().prop('checked', true).next().show();
 			  		}
 			  	};
 			  	last_touched = touched_word;

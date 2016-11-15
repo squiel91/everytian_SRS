@@ -1,65 +1,33 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import User, Word, Text, Knowledge
+from ..models import User, Word, Text, Knowledge, EvolutionRecord
 from random import randint
 import pdb
 import sys
 from collections import defaultdict
 
-def index(request):
-	return render(request, 'index.html')
+class WordTemplate:
 
-def register(request):
-	if request.method == "GET":
-		return render(request, 'register.html')
-	else:
-		email = request.POST.get("email", None)
-		name = request.POST.get("name", None)
-		password = request.POST.get("password", None)
-		retyped_pass = request.POST.get("retyped_pass", None)
-		method = request.POST.get("method", None)
-		pronunciation = request.POST.get("pronunciation", None)
+	def __init__(self, hanzi, pinyin):
+		self.hanzi = hanzi
+		self.pinyin = pinyin
 
-		User.objects.create(
-			email=email,
-			name=name,
-			password=password,
-			simplified=method,
-			pronunciation=pronunciation
-		)
-		request.session['email'] = email
-		return redirect('practice')
-
-def login(request):
-	if request.method == "GET":
-		return render(request, 'login.html')
-	else:
-		email = request.POST.get("email", None)
-		password = request.POST.get("password", None)
-		try:
-			user = User.objects.get(pk=email)
-		except User.DoesNotExist:
-			return render(request, 'login.html', { 
-				"error": "Email address doesnt exist!" })
-
-		if user.password == password:
-			# pdb.set_trace()
-			request.session['email'] = email
-			return redirect('practice')
+def text_with_def(text, word_definitions):
+	list_words_pinyin = []
+	for word in text:
+		if word in word_definitions:
+			list_words_pinyin.append(WordTemplate(word, word_definitions[word]["pinyin"]))
 		else:
-			return render(request, 'login.html', { 
-				"error": "Password doesnt match!" })
-
-def logout(request):
-	del request.session['email']
-	return redirect('index')
+			list_words_pinyin.append(WordTemplate(word, ""))
+	return list_words_pinyin
 
 def get_view_dict(resource):
+	word_definitions = resource.definitions_to_json()
 	return {
 		"resource_id": resource.id,
-		"text": resource.text,
+		"text": text_with_def(resource.text, word_definitions),
 		"tweet": "".join(resource.text),
-		"word_definitions":resource.definitions_to_json(),
+		"word_definitions": word_definitions,
 		"translation": resource.translation,
 		"audio": resource.audio,
 	}
@@ -92,16 +60,13 @@ def select_next(user):
 			max_known_words = known_words
 			best_sentence = text
 	
-	# print('Goodbye, cruel world!', file=sys.stderr)
-	print("known words: {}".format(known_words))
-	print("unknown words: {}".format(unknown_words))
-	print("undefined: {}".format(undefined))
 	# position = randint(1, Text.objects.count()) - 1
 	# return Text.objects.all()[position]
 	return best_sentence
 
+
 def practice(request):
-	# pdb.set_trace()
+	# ¡¡pdb.set_trace()
 	if not request.session.get('email'):
 		return redirect('login')
 	user = User.objects.get(pk=request.session['email'])
@@ -113,7 +78,7 @@ def practice(request):
 		resource = Text.objects.get(pk=request.POST["resource_id"])
 		all_words = set(resource.text)
 		unknown_words = set(request.POST.getlist("unknown"))
-		# pdb.set_trace()
+		
 		for word_str in all_words:
 			try:
 				word = Word.objects.get(pk=word_str)
@@ -131,11 +96,11 @@ def practice(request):
 			except Word.DoesNotExist:
 				pass
 				
-		user.resource_history.append(resource)
+		user.add_history(resource, learned=feedback["learned"], forgotten=feedback["forgotten"],
+			discov_known=feedback["discov_known"], discov_unknown=feedback["discov_unknown"])
 		if request.POST.get("favorite") == "on":
-			user.favorite_resources.append(resource)
+			user.add_favorite(resource)
 		user.save()
-		print(feedback)
 
 	text = select_next(user)
 	view_dict = get_view_dict(text)
@@ -145,18 +110,3 @@ def practice(request):
 	view_dict["discov_unknown"] = feedback["discov_unknown"]
 
 	return render(request, 'practice.html', view_dict)
-
-
-def favorites(request):
-	if not request.session.get('email'):
-		return redirect('login')
-	user = User.objects.get(pk=request.session['email'])
-	# pdb.set_trace()
-	return render(request, 'favorites.html', 
-		{"favorites": ["".join(fav.text) for fav in user.favorite_resources]})
-
-def evolution(request):
-	return render(request, 'evolution.html')
-
-def settings(request):
-	return render(request, 'settings.html')

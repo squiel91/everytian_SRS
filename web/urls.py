@@ -1,14 +1,14 @@
 from django.conf.urls import url
-from . import views
+from .views import practice, login, logout, index, register, favorites, evolution, settings
 
 urlpatterns = [
-	url(r'^$', views.index, name='index'),
-	url(r'^register$', views.register, name='register'),
-	url(r'^login$', views.login, name='login'),
-	url(r'^logout$', views.logout, name='logout'),
-	
-	url(r'^practice$', views.practice, name='practice'),
-	url(r'^favorites$', views.favorites, name='favorites'),
-	url(r'^evolution$', views.evolution, name='evolution'),
-	url(r'^settings$', views.settings, name='settings'),
+	url(r'^$', index, name='index'),
+	url(r'^register$', register, name='register'),
+	url(r'^login$', login, name='login'),
+	url(r'^logout$', logout, name='logout'),
+
+	url(r'^practice$', practice, name='practice'),
+	url(r'^favorites$', favorites, name='favorites'),
+	url(r'^evolution$', evolution, name='evolution'),
+	url(r'^settings$', settings, name='settings'),
 ]
