@@ -35,34 +35,34 @@ def get_view_dict(resource):
 punctuation = u'…！？／（）、，。：「」…『』！？《》“”；’ ‘【】·〔〕.,?!-[]'
 
 def select_next(user):
-	actual = None
-	max_known_words = 0
-	best_sentence = None
-	for text in Text.objects.all():
-		known_words = 0
-		unknown_words = 0
-		undefined = 0
-		actual = text
-		for word in actual.text:
-			if word not in punctuation:
-				try:
-					# pdb.set_trace()
-					knowledge = Knowledge.objects.get(user=user, word=word)
-					if knowledge.known:
-						known_words += 1
-					else:
-						unknown_words += 1
-				except Knowledge.DoesNotExist:
-					undefined += 1
-		# if text.audio ==333219:
-		# 	pdb.set_trace()
-		if max_known_words <= known_words and unknown_words + undefined <= 2 and text not in user.resource_history:
-			max_known_words = known_words
-			best_sentence = text
-	
-	# position = randint(1, Text.objects.count()) - 1
-	# return Text.objects.all()[position]
-	return best_sentence
+	# actual = None
+	# max_known_words = 0
+	# best_sentence = None
+	# for text in Text.objects.all():
+	# 	known_words = 0
+	# 	unknown_words = 0
+	# 	undefined = 0
+	# 	actual = text
+	# 	for word in actual.text:
+	# 		if word not in punctuation:
+	# 			try:
+	# 				# pdb.set_trace()
+	# 				knowledge = Knowledge.objects.get(user=user, word=word)
+	# 				if knowledge.known:
+	# 					known_words += 1
+	# 				else:
+	# 					unknown_words += 1
+	# 			except Knowledge.DoesNotExist:
+	# 				undefined += 1
+	# 	# if text.audio ==333219:
+	# 	# 	pdb.set_trace()
+	# 	if max_known_words <= known_words and unknown_words + undefined <= 2 and text not in user.resource_history:
+	# 		max_known_words = known_words
+	# 		best_sentence = text
+
+	position = randint(1, Text.objects.count()) - 1
+	return Text.objects.all()[position]
+	# return best_sentence
 
 
 def practice(request):
@@ -78,7 +78,7 @@ def practice(request):
 		resource = Text.objects.get(pk=request.POST["resource_id"])
 		all_words = set(resource.text)
 		unknown_words = set(request.POST.getlist("unknown"))
-		
+
 		for word_str in all_words:
 			try:
 				word = Word.objects.get(pk=word_str)
@@ -95,7 +95,7 @@ def practice(request):
 						feedback["discov_unknown"].append(word_str)
 			except Word.DoesNotExist:
 				pass
-				
+
 		user.add_history(resource, learned=feedback["learned"], forgotten=feedback["forgotten"],
 			discov_known=feedback["discov_known"], discov_unknown=feedback["discov_unknown"])
 		if request.POST.get("favorite") == "on":
