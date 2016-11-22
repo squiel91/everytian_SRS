@@ -7,6 +7,7 @@ function explain(word, pronunciation, definitions){
 	for(var i = 0; i < definitions.length; i++){
 		def_list.append("<li>" + definitions[i] + "</li>");	
 	}
+  $( ".explain-box").show();
 	$("#corrector").height($( ".explain-box").height());
 }
 
@@ -16,7 +17,8 @@ function clear_explain(){
 	$( ".explain-box .word" ).empty();
 	$( ".explain-box .pronunciation" ).empty();
 	$( ".explain-box .definition" ).empty();
-	$("·corrector").height($( ".explain-box").height());
+  $( ".explain-box").hide();
+	$("#corrector").height(0);
 }
 
 $( ".hanzi" ).click(function(event) {

@@ -6,13 +6,13 @@ body {
 	display: inline-block;
 	font-size: 30pt;
 	margin-right: 2px; 
-	height: 65pt;
+	height: 50pt;
 }
 
 .explain-box .word {
 	font-size: 30pt;
-	margin-right: 2px; 
-	height: 50pt;
+	margin-right: 1px; 
+	height: 55pt;
 }
 
 .text .word .hanzi{
@@ -23,20 +23,24 @@ body {
 }
 
 .text .word .pronunciation{
+	border-top: 3px solid #e74c3c;
 	float: left;
 	margin: auto;
 	width: 100%;
 	text-align: center;
 	color: red;
-	margin-top: 5pt;
+	margin-top: 1pt;
 	font-size: 10pt;
+	position: relative;
+	top: -6pt;
+	padding-top: 2pt;
 
 }
 
 .unknown {
 	/* color: red;
 	font-weight: bold;*/
-	border-bottom: 4px solid #e74c3c;
+	/*border-bottom: 3px solid #e74c3c;*/
 }
 
 .explain-box {
@@ -104,8 +108,8 @@ nav ul li {
 }
 
 #next {
-	margin-top: 20pt;
-
+	margin-top: 5pt;
+	margin-bottom: 15pt;
 	clear: both;
 	outline: none;
   -webkit-border-radius: 4;

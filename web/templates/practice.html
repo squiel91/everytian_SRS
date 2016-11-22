@@ -36,7 +36,7 @@
 					</ul>
 				</div>
 			</section>
-			{% if audio > 1000000 %}
+			{% if audio > 0 %}
 			<audio controls autoplay>
 			  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
 			Your browser does not support audio!
@@ -53,12 +53,14 @@
 				<div id="translation">{{ translation }}</div>
 			</div>
 			
-			<div class="explain-box">
+			<div class="explain-box" style="display: none;">
 				<div class="word"></div>
 				<div class="pronunciation"></div>
 				<ul class="definition"></ul>
 			</div>
+			<div>
 			<input id="next" type="submit" value="NEXT">
+			</div>
 		</form>
 		<div id="corrector"></div>
 		<script src="../static/jquery-3.1.1.min.js"></script>
