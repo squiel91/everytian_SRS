@@ -1,147 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		{% load static %}
 		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>everytiān</title>
-		<style>
-			body {
-				font-family: Arial;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="{% static 'practice.css' %}">
+	</head>
 	<body>
-
-		<style>
-
-			.text .word {
-				font-size: 30pt;
-				margin-right: 2px; 
-				height: 65pt;
-				float: left;
-			}
-
-			.explain-box .word {
-				font-size: 30pt;
-				margin-right: 2px; 
-				height: 50pt;
-			}
-
-			.text .word .hanzi{
-				font-size: 30pt;
-				margin-top: 0pt; 
-				display: block;
-			}
-
-			.text .word .pronunciation{
-				margin: auto;
-				text-align: center;
-				color: red;
-				margin-top: 5pt;
-				font-size: 10pt;
-				display: block;
-			}
-
-			.unknown {
-				/* color: red;
-				font-weight: bold;*/
-				border-bottom: 4px solid #e74c3c;
-			}
-
-			.explain-box {
-				border-top: 2px solid #bdc3c7;
-				margin-top: 5px;
-				position: fixed;
-				background-color: white;
-		    	bottom: 0;
-		    	width: 100%;
-
-			}
-
-			.explain-box .pronunciation {
-				font-size: 15pt;
-			}
-
-			.explain-box .definition {
-				font-size: 13pt;
-				list-style: none;
-				margin-top: 20px;
-			    padding: 0;
-			}
-
-			.actions {
-				margin-top: 40px;
-			}
-
-			#translation {
-				display: none;
-				font-size: 15pt;
-				float: left;
-				clear: left;
-				margin-top: 0pt;
-				margin-bottom: 15pt;
-			}
-
-			nav ul {
-				list-style-type: none;
-				padding: 0px;
-				margin: 0px;
-			}
-
-			nav ul li {
-				margin: 5px;
-				padding: 5px;
-				display: inline;
-			}
-
-			.section-actions ul {
-				list-style-type: none;
-				padding: 0px;
-				margin: 0px;
-				margin-top: 10px;
-			}
-
-			.section-actions ul li {
-				margin: 5px;
-				padding: 5px;
-				display: inline;
-			}
-
-			.hidden {
-				display: none;
-			}
-
-			#next {
-				margin-top: 20pt;
-				float: left;
-				clear: both;
-				outline: none;
-			  -webkit-border-radius: 4;
-			  -moz-border-radius: 4;
-			  border-radius: 4px;
-			  font-family: Arial;
-			  color: #ecf0f1;
-			  font-size: 20px;
-			  background-color: white;
-			  padding: 10px 20px 10px 20px;
-			  border: solid #ecf0f1 2px;
-			  text-decoration: none;
-			}
-
-			#next:hover {
-			  color: #bdc3c7;
-			  border: solid #bdc3c7 2px;
-			  text-decoration: none;
-
-			}
-
-			#next:active {
-			  color: #bdc3c7;
-			  border: solid #bdc3c7 2px;
-			  text-decoration: none;
-
-			}
-
-		</style>
-
 		<nav>
 			<div id="top-level">
 				<ul>
@@ -169,102 +36,37 @@
 					</ul>
 				</div>
 			</section>
-			{% if audio > 0 %}
+			{% if audio > 1000000 %}
 			<audio controls autoplay>
 			  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
 			Your browser does not support audio!
 			</audio>
 			{% endif %}
-			<section class="text">
+			<div class="text">
 				{% for word in text %}
 					<div class="word">
 						<div class="hanzi">{{ word.hanzi }}</div>
 						<input name="unknown" type="checkbox" value="{{ word.hanzi }}" class="hidden">
-						<div class="pronunciation" style="display: none;">{{ word.pinyin }}</div>
+						<span class="pronunciation" style="display: none;">{{ word.pinyin }}</span>
 					</div>
 				{% endfor %}
 				<div id="translation">{{ translation }}</div>
-			</section>
-			<section class="explain-box">
+			</div>
+			
+			<div class="explain-box">
 				<div class="word"></div>
 				<div class="pronunciation"></div>
 				<ul class="definition"></ul>
-			</section>
+			</div>
 			<input id="next" type="submit" value="NEXT">
 		</form>
+		<div id="corrector"></div>
 		<script src="../static/jquery-3.1.1.min.js"></script>
 		<script src="../static/notify.min.js"></script>
 		<script>
 			{% autoescape off %}
-			var dict = {{ word_definitions }};
+				var dict = {{ word_definitions }};
 			{% endautoescape %}
-
-			favorite = false;
-
-			function explain(word, pronunciation, definitions){
-				$( ".explain-box .word" ).text(word);
-				$( ".explain-box .pronunciation" ).text(pronunciation);
-				def_list = $( ".explain-box .definition" ).empty();
-				for(var i = 0; i < definitions.length; i++){
-					def_list.append("<li>" + definitions[i] + "</li>");	
-				}
-			}
-
-			var last_touched="";
-
-			function clear_explain(){
-				$( ".explain-box .word" ).empty();
-				$( ".explain-box .pronunciation" ).empty();
-				$( ".explain-box .definition" ).empty();
-			}
-
-			$( ".hanzi" ).click(function(event) {
-			  touched_word = $(this).text()
-			  if(touched_word in dict) {
-			  	if (last_touched == touched_word){
-			  		if ($(this).hasClass( "unknown" )){
-			  			$(this).removeClass( "unknown" );
-			  			$(this).next().prop('checked', false).next().hide();
-			  			clear_explain();
-			  		} else {
-			  			word_dict = dict[touched_word];
-			  			explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
-			  			$(this).addClass( "unknown" );
-			  			$(this).next().prop('checked', true).next().show();
-			  		}
-			  	} else {
-			  		word_dict = dict[touched_word];
-			  		explain(touched_word, word_dict["pinyin"], word_dict["definitions"]);
-			  		if (!$(this).hasClass("unknown")){
-			  			$(this).addClass("unknown");
-			  			$(this).next().prop('checked', true).next().show();
-			  		}
-			  	};
-			  	last_touched = touched_word;
-			  }
-			});
-
-			$( "#translate" ).click(function(event) {
-			  if(event.target.innerHTML == 'Translate') {
-			  	$("#translation").show();
-			  	event.target.innerHTML = "Hide translation";
-			  } else {
-			  	$("#translation").hide();
-			  	event.target.innerHTML = 'Translate';
-			  }
-			});
-
-			$( "#favorite" ).click(function(event) {
-			  if(event.target.innerHTML == 'Favorite') {
-			  	favorite = true;
-			  	$(this).text("Remove favorite");
-			  	$(this).next().prop('checked', true);
-			  } else {
-			  	favorite = false;
-			  	$(this).next().prop('checked', false);
-			  	$(this).text("Favorite");
-			  }
-			});
 
 			{% for learned_word in learned %}
 				$.notify("you learned {{ learned_word }}!", "success")
@@ -278,8 +80,7 @@
 			{% for discov_unknown_word in discov_unknown %}
 				$.notify("{{ discov_unknown_word }} added to your unknown dictionary", "warn")
 			{% endfor %}
-
 		</script>
-
+		<script type="text/javascript" src="{% static 'practice.js' %}"></script>
 	</body>
 </html>
