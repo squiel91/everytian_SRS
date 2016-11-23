@@ -47,24 +47,26 @@ $( ".hanzi" ).click(function(event) {
   }
 });
 
+$( "#sound" ).click(function(event) {
+  $("audio")[0].play();
+});
+
 $( "#translate" ).click(function(event) {
-  if(event.target.innerHTML == 'Translate') {
-  	$("#translation").show();
-  	event.target.innerHTML = "Hide translation";
-  } else {
-  	$("#translation").hide();
-  	event.target.innerHTML = 'Translate';
-  }
+  // if(event.target.innerHTML == 'Translate') {
+  	$("#translation").toggle();
+  // 	event.target.innerHTML = "Hide translation";
+  // } else {
+  // 	$("#translation").hide();
+  // 	event.target.innerHTML = 'Translate';
+  // }
 });
 
 $( "#favorite" ).click(function(event) {
-  if(event.target.innerHTML == 'Favorite') {
+  if(!favorite) {
   	favorite = true;
-  	$(this).text("Remove favorite");
   	$(this).next().prop('checked', true);
   } else {
   	favorite = false;
   	$(this).next().prop('checked', false);
-  	$(this).text("Favorite");
   }
 });

@@ -10,6 +10,11 @@ body {
                                   not supported by any browser */
 }
 
+img {
+	width: 32px;
+	height: 32px;
+}
+
 .text .word {
 	display: inline-block;
 	font-size: 30pt;
@@ -124,24 +129,24 @@ nav ul li {
   -moz-border-radius: 4;
   border-radius: 4px;
   font-family: Arial;
-  color: #ecf0f1;
+  color: #c0392b;
   font-size: 20px;
   background-color: white;
   padding: 10px 20px 10px 20px;
-  border: solid #ecf0f1 2px;
+  border: solid #c0392b 2px;
   text-decoration: none;
 }
 
 #next:hover {
-  color: #bdc3c7;
-  border: solid #bdc3c7 2px;
-  text-decoration: none;
+  color: #c0392b;
+  border: solid #c0392b 2px;
+  text-decoration: underline;
 
 }
 
 #next:active {
-  color: #bdc3c7;
-  border: solid #bdc3c7 2px;
-  text-decoration: none;
+  color: #c0392b;
+  border: solid #c0392b 2px;
+  text-decoration: underline;
 
 }

@@ -30,21 +30,15 @@
 			<section class="section-actions">
 				<div id="resource-level">
 					<ul>
-						<li id="favorite">Favorite</li>
+						<li id="sound"><img src="{% static 'speaker.png' %}"></li>
+						<li id="tweet"><a href="https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text={{ tweet }}"><img src="{% static 'twitter.png' %}"></a></li>
+						<li id="favorite"><img src="{% static 'like.png' %}"></li>
 						<input name="favorite" type="checkbox" class="hidden">
-						<li id="share">
-							<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.everytian.com" data-text="{{ tweet }}" data-hashtags="everytian">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-						</li>
-						<li id="translate">Translate</li>
+						<li id="translate"><img src="{% static 'translation.png' %}"></li>
 					</ul>
 				</div>
 			</section>
-			{% if audio > 0 %}
-			<audio controls autoplay>
-			  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
-			Your browser does not support audio!
-			</audio>
-			{% endif %}
+			<div id="translation">{{ translation }}</div>
 			<div class="text">
 				{% for word in text %}
 					<div class="word">
@@ -53,7 +47,6 @@
 						<span class="pronunciation" style="display: none;">{{ word.pinyin }}</span>
 					</div>
 				{% endfor %}
-				<div id="translation">{{ translation }}</div>
 			</div>
 			
 			<div class="explain-box" style="display: none;">
@@ -65,6 +58,12 @@
 			<input id="next" type="submit" value="NEXT">
 			</div>
 		</form>
+		{% if audio > 0 %}
+		<audio class="hidden">
+		  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
+		Your browser does not support audio!
+		</audio>
+		{% endif %}
 		<div id="corrector"></div>
 		<script src="../static/jquery-3.1.1.min.js"></script>
 		<script src="../static/notify.min.js"></script>
