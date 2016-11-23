@@ -1,12 +1,17 @@
 favorite = false;
 
+$( ".explain-box" ).draggable({ axis: "y" });
+
 function explain(word, pronunciation, definitions){
+  $( ".explain-box").hide();
+
 	$( ".explain-box .word" ).text(word);
 	$( ".explain-box .pronunciation" ).text(pronunciation);
 	def_list = $( ".explain-box .definition" ).empty();
 	for(var i = 0; i < definitions.length; i++){
 		def_list.append("<li>" + definitions[i] + "</li>");	
-	}
+	};
+
   $( ".explain-box").show();
 	$("#corrector").height($( ".explain-box").height());
 }

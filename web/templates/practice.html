@@ -15,8 +15,8 @@
 		<nav>
 			<div id="top-level">
 				<ul>
-					<li>everytiān</li>
-					<li><a href="{% url 'practice' %}">Practice</a></li>
+					<li class="logo">everytiān</li>
+					<li class="active"><a href="{% url 'practice' %}">Practice</a></li>
 					<li><a href="{% url 'favorites' %}">Favorites</a></li>
 					<li><a href="{% url 'evolution' %}">Evolution</a></li>
 					<li><a href="{% url 'settings' %}">Settings</a></li>
@@ -85,6 +85,7 @@
 				$.notify("{{ discov_unknown_word }} added to your unknown dictionary", "warn")
 			{% endfor %}
 		</script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="{% static 'practice.js' %}"></script>
 	</body>
 </html>
