@@ -12,6 +12,14 @@ margin: 0px;
  
 }
 
+.container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left:10pt;
+    padding-right:10pt;
+    max-width: 940px;
+}
+
 img {
 	width: 32px;
 	height: 32px;
@@ -133,6 +141,24 @@ nav a {
 	padding: 5px;
 	display: inline;
 	text-decoration: none;
+}
+
+.tip {
+    margin-left: auto;
+    margin-right: auto;
+	color: #ecf0f1;
+	/*float: right;*/
+	/*width: 200pt;*/
+}
+
+.drag {
+	outline: none;
+	border: none;
+}
+
+.tip img{
+/*    position: relative;
+    top: 10px;*/
 }
 
 .section-actions ul {
