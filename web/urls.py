@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import practice, login, logout, index, register, favorites, evolution, settings
+from .views import practice, login, logout, index, register, favorites, evolution, settings, resources
 
 urlpatterns = [
 	url(r'^$', index, name='index'),
@@ -11,4 +11,6 @@ urlpatterns = [
 	url(r'^favorites$', favorites, name='favorites'),
 	url(r'^evolution$', evolution, name='evolution'),
 	url(r'^settings$', settings, name='settings'),
+
+	url(r'^resources$', resources, name='resources'),
 ]

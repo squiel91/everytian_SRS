@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>everytiān Edit</title>
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.css"/>
+ 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.css"/>
+		<style>
+			#text {
+				outline: none;
+				font-size: 30pt;
+			}
+
+			#translation {
+				outline: none;
+				margin: 10pt 0pt;
+			}
+
+			#text .word{
+				margin-right: 5pt;
+			}
+
+			#confirm, #edit, #finish {
+				display: none;
+			}
+			.drag {
+ 				outline: none;
+ 				border: none;
+ 			}
+		</style>
+	</head>
+	<body>
+		<div id="carru" data-slick='{"slidesToShow": 1, "slidesToScroll": 2}'>
+			<div class="drag" id="actual">
+				<div id="audio_container" id="actual"></div>
+				<div id="text">loading...</div>
+				<div id="translation">loading...</div>
+				<button id="finish">Finish Edition</button>
+				<button id="next">Next</button>
+				<button id="edit">Edit</button>
+				<button id="confirm">Confirm Edition</button>
+			</div>
+			<div class="drag"><h3></h3></div>
+			<div class="drag" id="coming">
+				<div id="audio_container"></div>
+				<div id="text">loading...</div>
+				<div id="translation">loading...</div>
+				<button id="finish">Finish Edition</button>
+				<button id="next">Next</button>
+				<button id="edit">Edit</button>
+				<button id="confirm">Confirm Edition</button>
+			</div>
+		</div>
+		<div class="explain" style="display: none;">
+			<div class="word"></div>
+			<div class="pronunciation"></div>
+			<ul class="definition"></ul>
+		</div>
+		{% csrf_token %}
+		<script   src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+		<script>
+			
+			text_elem = $("#text")
+			translation_elem = $("#translation")
+			// For a given user u
+			// while true:
+			// 	get next resource
+			// 		render next resource
+
+			var resource_id = null;
+			base_url = 'http://127.0.0.1:8000/api/resources'
+			var dict = {};
+			var edition = "";
+
+			get_next($("#actual"));
+			get_next($("#coming"));
+
+			$("#carru").slick({
+   				speed: 300,
+   				infinite: false
+ 			});
+
+
+			function get_next(place) {
+				text_scoped = place.find("#text")
+				text_scoped.text("loading...");
+				translation_scoped = place.find("#translation");
+				translation_scoped.text("loading...");
+				$.getJSON( base_url, function( data ) {
+					resource_id = data["id"]
+					edition = data["text"].join(" ");
+					show_words(data["text"], text_scoped);
+					translation_scoped.text(data["translation"]);
+					if(data["audio"]){
+						place.find("#audio_container").append('<audio controls autoplay><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
+					}
+					words = data["words"];
+					for(i in words){
+						dict[words[i]['hanzi']] = {
+							'pronunciation': words[i]['pinyin'],
+							'definitions': words[i]['definitions']
+						}
+					}
+					$('#edit').show()
+			  	});
+		  	}
+
+			
+
+			function show_words(words, jQ_div){
+				jQ_div.empty();
+		  		for(i in words) {
+					 new_word = '<span class="word">'+ words[i] + '</span>';
+					 jQ_div.append(new_word);
+		  		};
+		  		$( ".word" ).click(on_word_click);
+
+			}
+
+			function get_definitions(words, dictionary){
+				var punctuation = '…！？／（）、，。：「」…『』！？《》“”；’ ‘【】·〔〕.,?!-[]';
+
+				for(i in words) { 
+				 	if (!dictionary[words[i]] && !punctuation.includes(words[i])) {
+				 		$.getJSON( 'http://127.0.0.1:8000/api/words/' + words[i], function(word) {
+							if(word['hanzi']){
+								dictionary[word['hanzi']] = {
+									'pronunciation': word['pinyin'],
+									'definitions': word['definitions']
+								}
+							} else {
+								console.log(word['warning']);
+							}
+						});
+					}
+				}
+			}
+
+			$("#next").click(function(evt) {
+				$(evt.target).text("loading");
+				dict = {};
+				get_next();
+				$(evt.target).text("Next");
+		  	});
+
+			$("#finish").click(function(evt) {
+				$(evt.target).hide();
+				var text = $("#text");
+		  		edition = text.text();
+		  		var words = text.text().split(' ');
+		  		show_words(words, text);
+		  		get_definitions(words, dict);
+		  		$('#finish').hide()
+				text.attr('contenteditable','false');
+				$("#translation").attr('contenteditable','false');
+		  		$("#edit").show();
+				$("#next").show();
+		  		$("#confirm").show();
+		  	});
+
+			$("#edit").click(function(evt) {
+				$(evt.target).hide();
+		  		$("#confirm").hide();
+				$("#text").text(edition);
+				$("#text").attr('contenteditable','true');
+				$("#translation").attr('contenteditable','true');
+		  		$("#finish").show();
+		  		$("#next").hide();
+			});
+
+			$("#confirm").click(function(evt) {
+				new_text = {
+						"text": edition.split(' '),
+						"translation": $("#translation").text(),
+						'csrfmiddlewaretoken': $( "[name='csrfmiddlewaretoken']" ).val()
+					}
+				$.post( 'http://127.0.0.1:8000/api/resources/' + resource_id, new_text, function(response) {
+					alert("Thank you!");
+					$("#next").show();
+					$("#edit").show();
+					$("#confirm").hide();
+
+				}, 'json');
+			});
+
+
+
+			// Explain
+
+			function explain(word, pronunciation, definitions){
+		  		$( ".explain").hide();
+				$( ".explain .word" ).text(word);
+				$( ".explain .pronunciation" ).text(pronunciation);
+				def_list = $( ".explain .definition" ).empty();
+				for(var i = 0; i < definitions.length; i++){
+					def_list.append("<li>" + definitions[i] + "</li>");	
+				};
+				$( ".explain").show();
+				// $("#corrector").height($( ".explain").height());
+			}
+
+			var last_touched="";
+
+			function clear_explain(){
+				$( ".explain .word" ).empty();
+				$( ".explain .pronunciation" ).empty();
+				$( ".explain .definition" ).empty();
+			  	$( ".explain").hide();
+				// $("#corrector").height(0);
+			}
+
+			function on_word_click(event) {
+			  touched_word = $(this).text()
+			  if(touched_word in dict) {
+			  	if (last_touched == touched_word){
+			  		if ($(this).hasClass( "unknown" )){
+			  			$(this).removeClass( "unknown" );
+			  			// $(this).next().prop('checked', false).next().hide();
+			  			clear_explain();
+			  		} else {
+			  			word_dict = dict[touched_word];
+			  			explain(touched_word, word_dict["pronunciation"], word_dict["definitions"]);
+			  			$(this).addClass( "unknown" );
+			  			// $(this).next().prop('checked', true).next().show();
+			  		}
+			  	} else {
+			  		word_dict = dict[touched_word];
+			  		explain(touched_word, word_dict["pronunciation"], word_dict["definitions"]);
+			  		if (!$(this).hasClass("unknown")){
+			  			$(this).addClass("unknown");
+			  			// $(this).next().prop('checked', true).next().show();
+			  		}
+			  	};
+			  	last_touched = touched_word;
+			  }
+			};
+
+		</script>
+	</body>
+</html>

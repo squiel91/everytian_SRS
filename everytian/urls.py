@@ -10,6 +10,7 @@ urlpatterns = [
             permanent=False),
         name="favicon"
     ),
+    url(r'^api/', include('api.urls')),
     url(r'^', include('web.urls'))
 
 ]
