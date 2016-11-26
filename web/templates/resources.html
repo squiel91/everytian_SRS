@@ -10,21 +10,21 @@
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.css"/>
  		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.css"/>
 		<style>
-			#text {
+			.text {
 				outline: none;
 				font-size: 30pt;
 			}
 
-			#translation {
+			.translation {
 				outline: none;
 				margin: 10pt 0pt;
 			}
 
-			#text .word{
+			.text .word{
 				margin-right: 5pt;
 			}
 
-			#confirm, #edit, #finish {
+			.confirm, .edit, .finish {
 				display: none;
 			}
 			.drag {
@@ -34,26 +34,10 @@
 		</style>
 	</head>
 	<body>
+		hello
 		<div id="carru" data-slick='{"slidesToShow": 1, "slidesToScroll": 2}'>
-			<div class="drag" id="actual">
-				<div id="audio_container" id="actual"></div>
-				<div id="text">loading...</div>
-				<div id="translation">loading...</div>
-				<button id="finish">Finish Edition</button>
-				<button id="next">Next</button>
-				<button id="edit">Edit</button>
-				<button id="confirm">Confirm Edition</button>
-			</div>
-			<div class="drag"><h3></h3></div>
-			<div class="drag" id="coming">
-				<div id="audio_container"></div>
-				<div id="text">loading...</div>
-				<div id="translation">loading...</div>
-				<button id="finish">Finish Edition</button>
-				<button id="next">Next</button>
-				<button id="edit">Edit</button>
-				<button id="confirm">Confirm Edition</button>
-			</div>
+
+
 		</div>
 		<div class="explain" style="display: none;">
 			<div class="word"></div>
@@ -76,29 +60,86 @@
 			base_url = 'http://127.0.0.1:8000/api/resources'
 			var dict = {};
 			var edition = "";
-
-			get_next($("#actual"));
-			get_next($("#coming"));
+			added_slicks = 0;
+			
 
 			$("#carru").slick({
    				speed: 300,
+   				accessibility: false,
+   				arrows: false,
    				infinite: false
  			});
 
+			$('#carru').on('afterChange', next_resource);
+ 			
+ 			get_next();
+ 			get_next();
+ 			current_slide_index = 0
 
-			function get_next(place) {
-				text_scoped = place.find("#text")
-				text_scoped.text("loading...");
-				translation_scoped = place.find("#translation");
-				translation_scoped.text("loading...");
+ 			function next_resource(event, slick, currentSlide){
+			  if(current_slide_index + 2 <= currentSlide){
+			  	console.log(currentSlide);
+			  	get_next();
+			  	dict = {};
+			  	$("#carru").slick('slickRemove', 0);
+			  	$("#carru").slick('slickRemove', 0);
+			  }
+			  // $("#carru").slick('slickRemove', currentSlide - 1);
+
+			}
+
+			function get_next() {
+				var resource = $('<div class="resource drag"></div>');
+				var text = $('<div class="text"></div>');
+				var translation = $('<div class="translation"></div>');
+				
+				var edit = $('<button id="edit">Edit</button>').click(function(evt) {
+					$(evt.target).hide();
+					text.text(text.data("string"));
+					text.attr('contenteditable','true');
+					translation.attr('contenteditable','true');
+					// deactivate draggable
+			  		finish.show();
+				});
+
+				var finish = $('<button id="finish">Finish</button>').hide().click(function(evt) {
+					finish.hide();
+					text.data("string", text.text())
+			  		var words = text.text().split(' ');
+			  		show_words(words, text);
+			  		get_definitions(words, dict);
+					text.attr('contenteditable','false');
+					translation.attr('contenteditable','false');
+			  		edit.show();
+			  		// activate draggable
+			  		confirm.show();
+			  	});
+
+				var confirm = $('<button id="confirm">Confirm Edition</button>').hide().click(function(evt) {
+						new_text = {
+							"text": text.data("string").split(' '),
+							"translation": translation.text(),
+							'csrfmiddlewaretoken': $( "[name='csrfmiddlewaretoken']" ).val()
+						}
+						confirm.text("Sending...")
+					$.post( 'http://127.0.0.1:8000/api/resources/' + resource.data("id"), new_text, function(response) {
+						edit.show();
+						confirm.text("Confirm")
+						confirm.hide();
+
+					}, 'json');
+				});
+				resource.append(text).append(translation);
+				resource.append(edit).append(finish).append(confirm);
+
 				$.getJSON( base_url, function( data ) {
-					resource_id = data["id"]
-					edition = data["text"].join(" ");
-					show_words(data["text"], text_scoped);
-					translation_scoped.text(data["translation"]);
-					if(data["audio"]){
-						place.find("#audio_container").append('<audio controls autoplay><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
-					}
+					resource.data("id", data["id"]);
+					text.data("string", data["text"].join(" "));
+					show_words(data["text"], text);
+					translation.text(data["translation"]);
+					// if(data["audio"]){
+					// 	place.find("#audio_container").append('<audio controls autoplay><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
+					// }
 					words = data["words"];
 					for(i in words){
 						dict[words[i]['hanzi']] = {
@@ -106,7 +147,11 @@
 							'definitions': words[i]['definitions']
 						}
 					}
-					$('#edit').show()
+					if(added_slicks > 0){
+						$("#carru").slick('slickAdd', "<div></div>");
+					} 
+					$("#carru").slick('slickAdd', resource);
+					added_slicks += 1;
 			  	});
 		  	}
 
@@ -115,10 +160,9 @@
 			function show_words(words, jQ_div){
 				jQ_div.empty();
 		  		for(i in words) {
-					 new_word = '<span class="word">'+ words[i] + '</span>';
+					 new_word = $('<span class="word">'+ words[i] + '</span>').click(on_word_click);
 					 jQ_div.append(new_word);
 		  		};
-		  		$( ".word" ).click(on_word_click);
 
 			}
 
@@ -140,55 +184,6 @@
 					}
 				}
 			}
-
-			$("#next").click(function(evt) {
-				$(evt.target).text("loading");
-				dict = {};
-				get_next();
-				$(evt.target).text("Next");
-		  	});
-
-			$("#finish").click(function(evt) {
-				$(evt.target).hide();
-				var text = $("#text");
-		  		edition = text.text();
-		  		var words = text.text().split(' ');
-		  		show_words(words, text);
-		  		get_definitions(words, dict);
-		  		$('#finish').hide()
-				text.attr('contenteditable','false');
-				$("#translation").attr('contenteditable','false');
-		  		$("#edit").show();
-				$("#next").show();
-		  		$("#confirm").show();
-		  	});
-
-			$("#edit").click(function(evt) {
-				$(evt.target).hide();
-		  		$("#confirm").hide();
-				$("#text").text(edition);
-				$("#text").attr('contenteditable','true');
-				$("#translation").attr('contenteditable','true');
-		  		$("#finish").show();
-		  		$("#next").hide();
-			});
-
-			$("#confirm").click(function(evt) {
-				new_text = {
-						"text": edition.split(' '),
-						"translation": $("#translation").text(),
-						'csrfmiddlewaretoken': $( "[name='csrfmiddlewaretoken']" ).val()
-					}
-				$.post( 'http://127.0.0.1:8000/api/resources/' + resource_id, new_text, function(response) {
-					alert("Thank you!");
-					$("#next").show();
-					$("#edit").show();
-					$("#confirm").hide();
-
-				}, 'json');
-			});
-
-
 
 			// Explain
 
