@@ -171,7 +171,7 @@
 
 				for(i in words) { 
 				 	if (!dictionary[words[i]] && !punctuation.includes(words[i])) {
-				 		$.getJSON( 'http://127.0.0.1:8000/api/words/' + words[i], function(word) {
+				 		$.getJSON( 'http://www.everytian.com/api/words/' + words[i], function(word) {
 							if(word['hanzi']){
 								dictionary[word['hanzi']] = {
 									'pronunciation': word['pinyin'],
