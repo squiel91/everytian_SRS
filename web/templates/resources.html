@@ -136,6 +136,7 @@
 					resource.data("id", data["id"]);
 					text.data("string", data["text"].join(" "));
 					show_words(data["text"], text);
+					get_definitions(data["text"], dict)
 					translation.text(data["translation"]);
 					// if(data["audio"]){
 					// 	place.find("#audio_container").append('<audio controls autoplay><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
