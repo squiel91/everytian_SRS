@@ -161,4 +161,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # SESSION_COOKIE_AGE = 60 * 60 * 24 * 30 # One month
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     'everytian.com',
+# )
+
