@@ -10,6 +10,13 @@
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.css"/>
  		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.css"/>
 		<style>
+
+			body {
+				font-family: "Helvetica Neue", Helvetica,Arial,sans-serif;
+				overflow-y: hidden;
+				margin: 0px;
+			}
+
 			.text {
 				outline: none;
 				font-size: 30pt;
@@ -21,7 +28,7 @@
 			}
 
 			.text .word{
-				margin-right: 5pt;
+				margin-right: 2pt;
 			}
 
 			.confirm, .edit, .finish {
@@ -31,9 +38,130 @@
  				outline: none;
  				border: none;
  			}
+
+ 			.explain {
+				border-top: 2px solid #bdc3c7;
+				margin-top: 5px;
+				position: fixed;
+				background-color: white;
+				bottom: 0;
+				width: 100%;
+				/*max-height: 150pt;*/
+				/*overflow: scroll;*/
+
+			}
+
+			.explain .word {
+				font-size: 30pt;
+			}
+
+			.explain .pronunciation {
+				font-size: 15pt;
+				margin-top: 0pt;
+			}
+
+			.explain .definition {
+				float: left;
+				clear: both;
+				font-size: 13pt;
+				list-style: none;
+				margin-top: 20px;
+			    padding: 0;
+			}
+
+			.actions {
+				margin-top: 40px;
+			}
+
+			#translation {
+				display: none;
+				font-size: 15pt;
+				clear: left;
+				margin-top: 0pt;
+				margin-bottom: 15pt;
+			}
+
+			nav {
+				background-color: #ecf0f1;
+			padding: 8px 0pt;
+			border-bottom: 1px solid #bdc3c7;
+
+			}
+
+			nav ul {
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+			}
+
+			nav ul li {
+				
+				margin-left: 5px;
+				margin-right: 5px;
+				margin-top: 0px;
+				margin-bottom: 0px;
+				height: 100%;
+				display: inline;
+			}
+
+			img {
+				width: 32px;
+				height: 32px;
+			}
+			#resource-level {
+				width: 100%;
+				height: 42pt;
+			}
+			#resource-level ul li {
+				float: right;
+			}
+
+			.section-actions ul {
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+				margin-top: 10px;
+			}
+
+			.section-actions ul li {
+				margin: 5px;
+				padding: 5px;
+				display: inline;
+			}
 		</style>
 	</head>
 	<body>
+		{% load static %}
+		<nav>
+			<div id="top-level">
+				<ul>
+					<li class="logo">everytiān</li>
+					<li>
+						<select>
+							<option>Practice</option>
+							<option>Favorites</option>
+							<option>Evolution</option>
+							<option>Settings</option>
+						</select>
+					</li>
+<!-- 					<li class="active"><a href="{% url 'practice' %}">Practice</a></li>
+					<li><a href="{% url 'favorites' %}">Favorites</a></li>
+					<li><a href="{% url 'evolution' %}">Evolution</a></li>
+					<li><a href="{% url 'settings' %}">Settings</a></li> -->
+				</ul>
+
+			</div>
+		</nav>
+		<!-- <section class="section-actions">
+			<div id="resource-level">
+				<ul>
+					<li id="sound"><img src="{% static 'speaker.png' %}"></li>
+					<li id="tweet"><a href="https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text={{ tweet }}"><img src="{% static 'twitter.png' %}"></a></li>
+					<li id="favorite"><img src="{% static 'like.png' %}"></li>
+					<li id="translate"><img src="{% static 'translation.png' %}"></li>
+				</ul>
+			</div>
+		</section> -->
 		<div id="carru" data-slick='{"slidesToShow": 1, "slidesToScroll": 2}'>
 
 
@@ -45,22 +173,17 @@
 		</div>
 		{% csrf_token %}
 		<script   src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="{% static 'jquery.ui.touch-punch.min.js' %}"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
-		<script>
-			
-			text_elem = $("#text")
-			translation_elem = $("#translation")
-			// For a given user u
-			// while true:
-			// 	get next resource
-			// 		render next resource
 
-			var resource_id = null;
-			base_url = 'http://www.everytian.com/api/resources'
+		<script>
+
+			$( ".explain" ).draggable({ axis: "y" });
+
+			base_url = "http://{{ request.get_host }}{% url 'api_resources' %}"
 			var dict = {};
-			var edition = "";
 			added_slicks = 0;
-			
 
 			$("#carru").slick({
    				speed: 300,
@@ -69,25 +192,35 @@
    				infinite: false
  			});
 
-			$('#carru').on('afterChange', next_resource);
- 			
- 			get_next();
- 			get_next();
- 			current_slide_index = 0
-
- 			function next_resource(event, slick, currentSlide){
+			$('#carru').on('afterChange', function next_resource(event, slick, currentSlide){
 			  if(current_slide_index + 2 <= currentSlide){
+				
 			  	console.log(currentSlide);
+			  	window.history.replaceState("object or string", "Title", "{% url 'resources' %}/" + $(".slick-current").data("id"));
 			  	get_next();
+
+			  	// consider allowign back and forth
 			  	$("#carru").slick('slickRemove', 0);
 			  	$("#carru").slick('slickRemove', 0);
 			  }
-			  // $("#carru").slick('slickRemove', currentSlide - 1);
+			});
+ 			
+ 			first_resource = true;
 
+ 			requested_resource_id = window.location.pathname.split("/")[2]
+ 			if(requested_resource_id) {
+				get_next(requested_resource_id);
+				first_resource = false;
+			} else {
+				get_next();
 			}
+ 			get_next();
+ 			
+ 			current_slide_index = 0
 
-			function get_next() {
+			function get_next(resource_id) {
 				var resource = $('<div class="resource drag"></div>');
+				var sound = $('<div class="sound"></div>');
 				var text = $('<div class="text"></div>');
 				var translation = $('<div class="translation"></div>');
 				
@@ -97,12 +230,13 @@
 					text.attr('contenteditable','true');
 					translation.attr('contenteditable','true');
 					// deactivate draggable
+			  		confirm.hide();
 			  		finish.show();
 				});
 
 				var finish = $('<button id="finish">Finish</button>').hide().click(function(evt) {
 					finish.hide();
-					text.data("string", text.text())
+					text.data("string", text.text());
 			  		var words = text.text().split(' ');
 			  		show_words(words, text);
 			  		get_definitions(words, dict);
@@ -127,18 +261,23 @@
 
 					}, 'json');
 				});
-				resource.append(text).append(translation);
+
+				resource.append(text).append(sound).append(translation);
 				resource.append(edit).append(finish).append(confirm);
 
-				$.getJSON( base_url, function( data ) {
+				request_url = base_url;
+				if(!(resource_id  === undefined)){
+					request_url = request_url + "/" + resource_id;
+				}
+				$.getJSON( request_url, function( data ) {
 					resource.data("id", data["id"]);
 					text.data("string", data["text"].join(" "));
 					show_words(data["text"], text);
 					get_definitions(data["text"], dict)
 					translation.text(data["translation"]);
-					// if(data["audio"]){
-					// 	place.find("#audio_container").append('<audio controls autoplay><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
-					// }
+					if(data["audio"]){
+						sound.append('<audio controls><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
+					}
 					words = data["words"];
 					for(i in words){
 						dict[words[i]['hanzi']] = {
@@ -148,13 +287,16 @@
 					}
 					if(added_slicks > 0){
 						$("#carru").slick('slickAdd', "<div></div>");
-					} 
+						added_slicks += 1;
+					}
+					if(first_resource){
+			  			window.history.replaceState("object or string", "Title", "{% url 'resources' %}/" + data["id"]);
+						first_resource = false;
+					}
 					$("#carru").slick('slickAdd', resource);
 					added_slicks += 1;
 			  	});
 		  	}
-
-			
 
 			function show_words(words, jQ_div){
 				jQ_div.empty();
@@ -167,10 +309,9 @@
 
 			function get_definitions(words, dictionary){
 				var punctuation = '…！？／（）、，。：「」…『』！？《》“”；’ ‘【】·〔〕.,?!-[]';
-
 				for(i in words) { 
 				 	if (!dictionary[words[i]] && !punctuation.includes(words[i])) {
-				 		$.getJSON( 'http://www.everytian.com/api/words/' + words[i], function(word) {
+				 		$.getJSON( "http://{{ request.get_host }}{% url 'api_words' %}/" + words[i], function(word) {
 							if(word['hanzi']){
 								dictionary[word['hanzi']] = {
 									'pronunciation': word['pinyin'],

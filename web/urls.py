@@ -12,5 +12,5 @@ urlpatterns = [
 	url(r'^evolution$', evolution, name='evolution'),
 	url(r'^settings$', settings, name='settings'),
 
-	url(r'^resources$', resources, name='resources'),
+	url(r'^resources', resources, name='resources'),
 ]

@@ -10,7 +10,7 @@ urlpatterns = [
             permanent=False),
         name="favicon"
     ),
-    url(r'^api/', include('api.urls')),
+    url(r'^api/', include('api.urls'), name="domain_host"),
     url(r'^', include('web.urls'))
 
 ]

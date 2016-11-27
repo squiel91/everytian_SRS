@@ -10,6 +10,6 @@ urlpatterns = [
 	# url(r'^users/favorites$', settings, name='settings'), # GET
 	# url(r'^users/evolution$', settings, name='settings'), # GET
 
-	url(r'^resources(/(?P<id>[^/]+))?$', resources, name='resources'), # GET, POST, PUT
-	url(r'^words(/(?P<id>[^/]+))?$', words, name='words'), # GET, POST
+	url(r'^resources(/(?P<id>[^/]+))?$', resources, name='api_resources'), # GET, POST, PUT
+	url(r'^words(/(?P<id>[^/]+))?$', words, name='api_words'), # GET, POST
 ]
