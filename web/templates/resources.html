@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>everytiān Edit</title>
+		<title>everytiān</title>
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta charset="UTF-8">
@@ -20,6 +20,37 @@
 			.text {
 				outline: none;
 				font-size: 30pt;
+				line-height: 45pt;
+				margin-top: 15pt;
+				margin-bottom: 15pt;
+			}
+
+			.text .word {
+				padding-bottom: 1pt;
+				font-size: 30pt;
+			}
+
+			button {
+				padding: 10pt 20pt;
+			    background-color: #d9d9d9;
+			    border: none;
+			    margin-right: 10pt;
+			    color: #a5a5a5;
+			    font-size: 15pt;
+			    font-weight: bolder;
+			}
+
+			button:hover {
+			    background-color: #bdc3c7;
+			    color: white;
+			}
+
+			.translation {
+				display: none;
+			}
+
+			.text .unknown{
+				border-bottom: 3px solid #e74c3c;
 			}
 
 			.translation {
@@ -82,74 +113,156 @@
 			}
 
 			nav {
-				background-color: #ecf0f1;
-			padding: 8px 0pt;
-			border-bottom: 1px solid #bdc3c7;
+				background-color: #f2f2f2;
+				padding: 0pt;
+				margin: 0pt;
+				max-height: 100px;
+				overflow: hidden;
 
 			}
 
-			nav ul {
-				list-style-type: none;
-				padding: 0px;
-				margin: 0px;
+			nav .left-wrapper {
+				float: left;
+
 			}
 
-			nav ul li {
-				
-				margin-left: 5px;
-				margin-right: 5px;
-				margin-top: 0px;
-				margin-bottom: 0px;
-				height: 100%;
-				display: inline;
+			nav .left-wrapper select {
+				height: 50px;
+				font-size: 15pt;
+				border: none;
+				outline: none;
+				padding-right: 5px;
+				background-color: transparent;
+
 			}
 
-			img {
-				width: 32px;
-				height: 32px;
-			}
-			#resource-level {
-				width: 100%;
-				height: 42pt;
-			}
-			#resource-level ul li {
+			nav .right-wrapper {
 				float: right;
 			}
 
-			.section-actions ul {
+			nav .right-wrapper ul {
 				list-style-type: none;
 				padding: 0px;
 				margin: 0px;
-				margin-top: 10px;
+				color: #a6a6a6;
 			}
 
-			.section-actions ul li {
-				margin: 5px;
-				padding: 5px;
-				display: inline;
+			nav .right-wrapper #translate {
+				background-image: url("/static/assets/translate.svg");
 			}
+
+			nav .right-wrapper #translate:hover, nav .right-wrapper #translate.active {
+				background-image: url("/static/assets/translate_active.svg");
+				background-color: #bdc3c7;
+			}
+
+			nav .right-wrapper #twitter {
+				background-image: url("/static/assets/twitter.svg");
+				background-color: #1da1f3;
+
+			}
+
+			nav .right-wrapper #twitter:hover { 
+    			background-color: #337ab7
+			}
+
+			nav .right-wrapper #favorite {
+				background-image: url("/static/assets/favorite.svg");
+			}
+
+			nav .right-wrapper #favorite:hover, nav .right-wrapper #favorite.active {
+				background-image: url("/static/assets/favorite_active.svg");
+				background-color: #e74c3c;
+			}
+
+			nav .right-wrapper #sound {
+				background-image: url("/static/assets/sound.svg");
+			}
+
+			nav .right-wrapper #sound:hover, nav .right-wrapper #sound.active {
+				background-image: url("/static/assets/sound_active.svg");
+				background-color: #bdc3c7;
+			}
+
+			nav .right-wrapper #edit {
+				background-image: url("/static/assets/edit.svg");
+			}
+
+			nav .right-wrapper #edit:hover, nav .right-wrapper #edit.active {
+				background-image: url("/static/assets/edit_active.svg");
+				background-color: #bdc3c7;
+			}
+
+			nav .right-wrapper #ask {
+				background-image: url("/static/assets/ask.svg");
+			}
+
+			nav .right-wrapper #ask:hover, nav .right-wrapper #ask.active {
+				background-image: url("/static/assets/ask_active.svg");
+				background-color: #bdc3c7;
+			}
+
+			nav .right-wrapper ul li {
+				float: right;
+				height: 50px;
+				width: 50px;
+				padding: 0px;
+				margin: 0px;
+				background-color: #d9d9d9;
+				overflow: hidden;
+			}
+
+			.resource.drag {
+				height: 1000pt;
+			}
+
+
 		</style>
 	</head>
 	<body>
 		{% load static %}
 		<nav>
-			<div id="top-level">
+			<div class="left-wrapper">
+				<select>
+					<option>Practice</option>
+					<option>Favorites</option>
+					<option>Evolution</option>
+					<option>Settings</option>
+				</select>
+			</div>
+			<div class="right-wrapper">
 				<ul>
-					<li class="logo">everytiān</li>
-					<li>
-						<select>
-							<option>Practice</option>
-							<option>Favorites</option>
-							<option>Evolution</option>
-							<option>Settings</option>
-						</select>
-					</li>
-<!-- 					<li class="active"><a href="{% url 'practice' %}">Practice</a></li>
-					<li><a href="{% url 'favorites' %}">Favorites</a></li>
-					<li><a href="{% url 'evolution' %}">Evolution</a></li>
-					<li><a href="{% url 'settings' %}">Settings</a></li> -->
+					<li id="twitter" onclick=" window.open('https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text=' + $('.text').data('string'), '_blank');"></li>
+					<li id="edit" onclick="if($(this).hasClass('active')){ 
+							$('#finish').hide();
+							$('#continue-edition').hide();
+							$('#confirm').hide();
+							$('.text').attr('contenteditable','false');
+							$('#translation').attr('contenteditable','false');
+							$('.text').data('string', $('.text').data('backup'));
+							var words = $('.text').data('backup').split(' ');
+					  		show_words(words, $('.text'));
+							$(this).removeClass('active');
+						} else { 
+							$(this).addClass('active'); 
+							$('.text').text($('.text').data('string'));  
+							$('.text').attr('contenteditable','true');  
+							$('.translation').attr('contenteditable','true'); 
+							$('#confirm').hide();
+							$('#finish').show();
+							$('#cancel').show();
+							$(this).addClass('active')}"></li>
+					<li id="ask" onclick="if($(this).hasClass('active')){
+							$(this).removeClass('active');
+							$('#question').hide()
+						} else { 
+							$('#question').show()
+							$(this).addClass('active')
+						};"></li>
+					<li id="sound" onclick="if($(this).hasClass('active')){ $(this).removeClass('active'); $('audio')[0].pause(); $('audio')[0].currentTime = 0;} else { $(this).addClass('active'); $('audio')[0].play(); var sound_button = $(this); $('audio').on('ended', function(){ sound_button.removeClass('active');});};"></li>
+					<li id="favorite" onclick="if($(this).hasClass('active')){ $(this).removeClass('active');} else { $(this).addClass('active')};"></li>
+					<li id="translate" onclick="if(!$(this).hasClass('active')){ $('.slick-current').find('.translation').show(); $(this).addClass('active');} else { $('.slick-current').find('.translation').hide(); $(this).removeClass('active')};"></li>
 				</ul>
-
 			</div>
 		</nav>
 		<!-- <section class="section-actions">
@@ -223,8 +336,10 @@
 				var sound = $('<div class="sound"></div>');
 				var text = $('<div class="text"></div>');
 				var translation = $('<div class="translation"></div>');
+
 				
-				var edit = $('<button id="edit">Edit</button>').click(function(evt) {
+				var edit = $('<button id="continue-edition">Continue edition</button>').hide().click(function(evt) {
+					edit.hide();
 					$(evt.target).hide();
 					text.text(text.data("string"));
 					text.attr('contenteditable','true');
@@ -255,15 +370,19 @@
 						}
 						confirm.text("Sending...")
 					$.post(base_url + '/' + resource.data("id"), new_text, function(response) {
-						edit.show();
-						confirm.text("Confirm")
 						confirm.hide();
+						confirm.text("Confirm")
+						edit.hide()
+						$('#edit').removeClass('active');
 
 					}, 'json');
 				});
 
+				var question = $('<div id="question"><h2>You will be soon able to ask questions to a techer!</h2></div>').hide()
+
+
 				resource.append(text).append(sound).append(translation);
-				resource.append(edit).append(finish).append(confirm);
+				resource.append(edit).append(finish).append(confirm).append(question);
 
 				request_url = base_url;
 				if(!(resource_id  === undefined)){
@@ -272,18 +391,19 @@
 				$.getJSON( request_url, function( data ) {
 					resource.data("id", data["id"]);
 					text.data("string", data["text"].join(" "));
-					show_words(data["text"], text);
-					get_definitions(data["text"], dict)
-					translation.text(data["translation"]);
-					if(data["audio"]){
-						sound.append('<audio controls><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
-					}
+					text.data("backup", data["text"].join(" "));
 					words = data["words"];
 					for(i in words){
 						dict[words[i]['hanzi']] = {
 							'pronunciation': words[i]['pinyin'],
 							'definitions': words[i]['definitions']
 						}
+					}
+					show_words(data["text"], text, dict);
+					// get_definitions(data["text"], dict)
+					translation.text(data["translation"]);
+					if(data["audio"]){
+						sound.append('<audio><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
 					}
 					if(added_slicks > 0){
 						$("#carru").slick('slickAdd', "<div></div>");
@@ -298,12 +418,24 @@
 			  	});
 		  	}
 
-			function show_words(words, jQ_div){
+			function show_words(words, jQ_div, dict){
 				jQ_div.empty();
 		  		for(i in words) {
-					 new_word = $('<span class="word">'+ words[i] + '</span>').click(on_word_click);
-					 jQ_div.append(new_word);
+		  			word = words[i]
+		  			new_word = $('<span class="word">'+ word + '</span>').click(on_word_click);
+		  	// 		if(dict[word]){
+			  // 			new_word.append('<span class="pronunciation">' + dict[word]['pronunciation'] + '</span>')
+					// }
+					jQ_div.append(new_word);
 		  		};
+
+		  // 		{% for word in text %}
+				// 	<div class="word">
+				// 		<div class="hanzi">{{ word.hanzi }}</div>
+				// 		<input name="unknown" type="checkbox" value="{{ word.hanzi }}" class="hidden">
+				// 		<span class="pronunciation" style="display: none;">{{ word.pinyin }}</span>
+				// 	</div>
+				// {% endfor %}
 
 			}
 
@@ -356,11 +488,14 @@
 			  		if ($(this).hasClass( "unknown" )){
 			  			$(this).removeClass( "unknown" );
 			  			// $(this).next().prop('checked', false).next().hide();
+			  			// $(this).find('.pronunciation').offset($(this).offset()).hide();
 			  			clear_explain();
 			  		} else {
 			  			word_dict = dict[touched_word];
 			  			explain(touched_word, word_dict["pronunciation"], word_dict["definitions"]);
 			  			$(this).addClass( "unknown" );
+			  			// console.log($(this).offset());
+			  			// $(this).find('.pronunciation').offset($(this).offset()).show();
 			  			// $(this).next().prop('checked', true).next().show();
 			  		}
 			  	} else {
@@ -368,6 +503,8 @@
 			  		explain(touched_word, word_dict["pronunciation"], word_dict["definitions"]);
 			  		if (!$(this).hasClass("unknown")){
 			  			$(this).addClass("unknown");
+			  			// console.log($(this).offset());
+			  			// $(this).find('.pronunciation').offset($(this).offset()).show();
 			  			// $(this).next().prop('checked', true).next().show();
 			  		}
 			  	};

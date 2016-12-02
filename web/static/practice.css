@@ -37,9 +37,10 @@ img {
 
 }
 
-.text .word .pronunciation{
-	border-top: 3px solid #e74c3c;
-	float: left;
+.text .unknown{
+	color: red;
+	border-bottom: 3px solid #e74c3c;
+/*	float: left;
 	margin: auto;
 	width: 100%;
 	text-align: center;
@@ -48,7 +49,7 @@ img {
 	font-size: 10pt;
 	position: relative;
 	top: -6pt;
-	padding-top: 2pt;
+	padding-top: 2pt;*/
 
 }
 

@@ -2,7 +2,8 @@ from django.conf.urls import url
 from .views import practice, login, logout, index, register, favorites, evolution, settings, resources
 
 urlpatterns = [
-	url(r'^$', index, name='index'),
+	url(r'^$', resources, name='index'),
+	# url(r'^$', index, name='index'),
 	url(r'^register$', register, name='register'),
 	url(r'^login$', login, name='login'),
 	url(r'^logout$', logout, name='logout'),
