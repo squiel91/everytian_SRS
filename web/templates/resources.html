@@ -31,7 +31,9 @@
 			}
 
 			button {
-				padding: 10pt 20pt;
+				padding: 0pt 20pt;
+				height: 50px;
+				margin-bottom: 10pt;
 			    background-color: #d9d9d9;
 			    border: none;
 			    margin-right: 10pt;
@@ -123,6 +125,7 @@
 
 			nav .left-wrapper {
 				float: left;
+				display: none;
 
 			}
 
@@ -338,7 +341,7 @@
 				var translation = $('<div class="translation"></div>');
 
 				
-				var edit = $('<button id="continue-edition">Continue edition</button>').hide().click(function(evt) {
+				var edit = $('<button id="continue-edition">Edit</button>').hide().click(function(evt) {
 					edit.hide();
 					$(evt.target).hide();
 					text.text(text.data("string"));
@@ -362,7 +365,7 @@
 			  		confirm.show();
 			  	});
 
-				var confirm = $('<button id="confirm">Confirm Edition</button>').hide().click(function(evt) {
+				var confirm = $('<button id="confirm">Confirm</button>').hide().click(function(evt) {
 						new_text = {
 							"text": text.data("string").split(' '),
 							"translation": translation.text(),
@@ -378,7 +381,7 @@
 					}, 'json');
 				});
 
-				var question = $('<div id="question"><h2>You will be soon able to ask questions to a techer!</h2></div>').hide()
+				var question = $('<div id="question"><h2>You will soon be able to ask questions to a techer!</h2></div>').hide()
 
 
 				resource.append(text).append(sound).append(translation);
