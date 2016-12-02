@@ -240,31 +240,31 @@
 							$('#finish').hide();
 							$('#continue-edition').hide();
 							$('#confirm').hide();
-							$('.text').attr('contenteditable','false');
-							$('#translation').attr('contenteditable','false');
-							$('.text').data('string', $('.text').data('backup'));
-							var words = $('.text').data('backup').split(' ');
-					  		show_words(words, $('.text'));
+							$('.slick-active').find('.text').attr('contenteditable','false');
+							$('.slick-active').find('#translation').attr('contenteditable','false');
+							$('.slick-active').find('.text').data('string', $('.slick-active').find('.text').data('backup'));
+							var words = $('.slick-active').find('.text').data('backup').split(' ');
+					  		show_words(words, $('.slick-active').find('.text'));
 							$(this).removeClass('active');
 						} else { 
 							$(this).addClass('active'); 
-							$('.text').text($('.text').data('string'));  
-							$('.text').attr('contenteditable','true');  
-							$('.translation').attr('contenteditable','true'); 
+							$('.slick-active').find('.text').text($('.slick-active').find('.text').data('string'));  
+							$('.slick-active').find('.text').attr('contenteditable','true');  
+							$('.slick-active').find('.translation').attr('contenteditable','true'); 
 							$('#confirm').hide();
 							$('#finish').show();
 							$('#cancel').show();
 							$(this).addClass('active')}"></li>
 					<li id="ask" onclick="if($(this).hasClass('active')){
 							$(this).removeClass('active');
-							$('.slick-current').find('#question').hide()
+							$('.slick-active').find('#question').hide()
 						} else { 
-							$('.slick-current').find('#question').show()
+							$('.slick-active').find('#question').show()
 							$(this).addClass('active')
 						};"></li>
-					<li id="sound" onclick="if($(this).hasClass('active')){ $(this).removeClass('active'); $('.slick-current').find('audio')[0].pause(); $('audio')[0].currentTime = 0;} else { $(this).addClass('active'); $('.slick-current').find('audio')[0].play(); var sound_button = $(this); $('.slick-current').find('audio').on('ended', function(){ sound_button.removeClass('active');});};"></li>
+					<li id="sound" onclick="if($(this).hasClass('active')){ $(this).removeClass('active'); $('.slick-active').find('audio')[0].pause(); $('audio')[0].currentTime = 0;} else { $(this).addClass('active'); $('.slick-active').find('audio')[0].play(); var sound_button = $(this); $('.slick-active').find('audio').on('ended', function(){ sound_button.removeClass('active');});};"></li>
 					<li id="favorite" onclick="if($(this).hasClass('active')){ $(this).removeClass('active');} else { $(this).addClass('active')};"></li>
-					<li id="translate" onclick="if(!$(this).hasClass('active')){ $('.slick-current').find('.translation').show(); $(this).addClass('active');} else { $('.slick-current').find('.translation').hide(); $(this).removeClass('active')};"></li>
+					<li id="translate" onclick="if(!$(this).hasClass('active')){ $('.slick-active').find('.translation').show(); $(this).addClass('active');} else { $('.slick-current').find('.translation').hide(); $(this).removeClass('active')};"></li>
 				</ul>
 			</div>
 		</nav>
