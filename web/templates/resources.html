@@ -12,9 +12,13 @@
 		<style>
 
 			body {
-				font-family: "Helvetica Neue", Helvetica,Arial,sans-serif;
-				overflow-y: hidden;
 				margin: 0px;
+			}
+
+			.wrapper {
+				    margin-left: auto;
+				    margin-right: auto;
+				    max-width: 940px;
 			}
 
 			.text {
@@ -40,6 +44,7 @@
 			    color: #a5a5a5;
 			    font-size: 15pt;
 			    font-weight: bolder;
+			    outline: none;
 			}
 
 			button:hover {
@@ -155,7 +160,7 @@
 			}
 
 			nav .right-wrapper #translate:hover, nav .right-wrapper #translate.active {
-				background-image: url("/static/assets/translate_active.svg");
+				background-position: right; 
 				background-color: #bdc3c7;
 			}
 
@@ -174,7 +179,7 @@
 			}
 
 			nav .right-wrapper #favorite:hover, nav .right-wrapper #favorite.active {
-				background-image: url("/static/assets/favorite_active.svg");
+				background-position: right; 
 				background-color: #e74c3c;
 			}
 
@@ -183,7 +188,7 @@
 			}
 
 			nav .right-wrapper #sound:hover, nav .right-wrapper #sound.active {
-				background-image: url("/static/assets/sound_active.svg");
+				background-position: right; 
 				background-color: #bdc3c7;
 			}
 
@@ -192,7 +197,8 @@
 			}
 
 			nav .right-wrapper #edit:hover, nav .right-wrapper #edit.active {
-				background-image: url("/static/assets/edit_active.svg");
+				background-position: right; 
+
 				background-color: #bdc3c7;
 			}
 
@@ -201,7 +207,7 @@
 			}
 
 			nav .right-wrapper #ask:hover, nav .right-wrapper #ask.active {
-				background-image: url("/static/assets/ask_active.svg");
+				background-position: right; 
 				background-color: #bdc3c7;
 			}
 
@@ -216,58 +222,62 @@
 			}
 
 			.resource.drag {
-				height: 1000pt;
+
 			}
+
 
 
 		</style>
 	</head>
 	<body>
 		{% load static %}
-		<nav>
-			<div class="left-wrapper">
-				<select>
-					<option>Practice</option>
-					<option>Favorites</option>
-					<option>Evolution</option>
-					<option>Settings</option>
-				</select>
-			</div>
-			<div class="right-wrapper">
-				<ul>
-					<li id="twitter" onclick=" window.open('https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text=' + $('.text').data('string'), '_blank');"></li>
-					<li id="edit" onclick="if($(this).hasClass('active')){ 
-							$('#finish').hide();
-							$('#continue-edition').hide();
-							$('#confirm').hide();
-							$('.slick-active').find('.text').attr('contenteditable','false');
-							$('.slick-active').find('#translation').attr('contenteditable','false');
-							$('.slick-active').find('.text').data('string', $('.slick-active').find('.text').data('backup'));
-							var words = $('.slick-active').find('.text').data('backup').split(' ');
-					  		show_words(words, $('.slick-active').find('.text'));
-							$(this).removeClass('active');
-						} else { 
-							$(this).addClass('active'); 
-							$('.slick-active').find('.text').text($('.slick-active').find('.text').data('string'));  
-							$('.slick-active').find('.text').attr('contenteditable','true');  
-							$('.slick-active').find('.translation').attr('contenteditable','true'); 
-							$('#confirm').hide();
-							$('#finish').show();
-							$('#cancel').show();
-							$(this).addClass('active')}"></li>
-					<li id="ask" onclick="if($(this).hasClass('active')){
-							$(this).removeClass('active');
-							$('.slick-active').find('#question').hide()
-						} else { 
-							$('.slick-active').find('#question').show()
-							$(this).addClass('active')
-						};"></li>
-					<li id="sound" onclick="if($(this).hasClass('active')){ $(this).removeClass('active'); $('.slick-active').find('audio')[0].pause(); $('audio')[0].currentTime = 0;} else { $(this).addClass('active'); $('.slick-active').find('audio')[0].play(); var sound_button = $(this); $('.slick-active').find('audio').on('ended', function(){ sound_button.removeClass('active');});};"></li>
-					<li id="favorite" onclick="if($(this).hasClass('active')){ $(this).removeClass('active');} else { $(this).addClass('active')};"></li>
-					<li id="translate" onclick="if(!$(this).hasClass('active')){ $('.slick-active').find('.translation').show(); $(this).addClass('active');} else { $('.slick-current').find('.translation').hide(); $(this).removeClass('active')};"></li>
-				</ul>
-			</div>
-		</nav>
+		<!-- <div class="wrapper"> -->
+			<nav>
+				<div class="left-wrapper">
+					<select>
+						<option>Practice</option>
+						<option>Favorites</option>
+						<option>Evolution</option>
+						<option>Settings</option>
+					</select>
+				</div>
+				<div class="right-wrapper">
+					<ul>
+						<li id="twitter" onclick=" window.open('https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text=' + $('.text').data('string'), '_blank');"></li>
+						<li id="edit" onclick="if($(this).hasClass('active')){ 
+								$('#finish').hide();
+								$('#continue-edition').hide();
+								$('#confirm').hide();
+								$('.slick-active').find('.text').attr('contenteditable','false');
+								$('.slick-active').find('#translation').attr('contenteditable','false');
+								$('.slick-active').find('.text').data('string', $('.slick-active').find('.text').data('backup'));
+								var words = $('.slick-active').find('.text').data('backup').split(' ');
+						  		show_words(words, $('.slick-active').find('.text'));
+								$(this).removeClass('active');
+							} else { 
+								clear_explain();
+								$(this).addClass('active'); 
+								$('.slick-active').find('.text').text($('.slick-active').find('.text').data('string'));  
+								$('.slick-active').find('.text').attr('contenteditable','true');  
+								$('.slick-active').find('.translation').attr('contenteditable','true'); 
+								$('#confirm').hide();
+								$('#finish').show();
+								$('#cancel').show();
+								$(this).addClass('active')}"></li>
+						<li id="ask" onclick="if($(this).hasClass('active')){
+								$(this).removeClass('active');
+								$('.slick-active').find('#question').hide()
+							} else { 
+								$('.slick-active').find('#question').show()
+								$(this).addClass('active')
+							};"></li>
+						<li id="sound" onclick="if($(this).hasClass('active')){ $(this).removeClass('active'); $('.slick-active').find('audio')[0].pause(); $('audio')[0].currentTime = 0;} else { $(this).addClass('active'); $('.slick-active').find('audio')[0].play(); var sound_button = $(this); $('.slick-active').find('audio').on('ended', function(){ sound_button.removeClass('active');});};"></li>
+						<li id="favorite" onclick="if($(this).hasClass('active')){ $(this).removeClass('active');} else { $(this).addClass('active')};"></li>
+						<li id="translate" onclick="if(!$(this).hasClass('active')){ $('.slick-active').find('.translation').show(); $(this).addClass('active');} else { $('.slick-current').find('.translation').hide(); $(this).removeClass('active')};"></li>
+					</ul>
+				</div>
+			</nav>
+		<!-- </div> -->
 		<!-- <section class="section-actions">
 			<div id="resource-level">
 				<ul>
@@ -307,6 +317,10 @@
    				arrows: false,
    				infinite: false
  			});
+
+			$('#carru').on('swipe', function next_resource(event, slick, currentSlide){
+				clear_explain();
+			});
 
 			$('#carru').on('afterChange', function next_resource(event, slick, currentSlide){
 			  if(current_slide_index + 2 <= currentSlide){
@@ -422,6 +436,8 @@
 					}
 					$("#carru").slick('slickAdd', resource);
 					added_slicks += 1;
+
+					resource.css("min-height", $(window).height() - $('nav').height());
 			  	});
 		  	}
 
@@ -467,24 +483,28 @@
 			// Explain
 
 			function explain(word, pronunciation, definitions){
-		  		$( ".explain").hide();
-				$( ".explain .word" ).text(word);
-				$( ".explain .pronunciation" ).text(pronunciation);
-				def_list = $( ".explain .definition" ).empty();
-				for(var i = 0; i < definitions.length; i++){
-					def_list.append("<li>" + definitions[i] + "</li>");	
-				};
-				$( ".explain").show();
+		  		$( ".explain" ).show()
+		  		$( ".explain" ).animate({top: $(window).height()}, 200, function(){
+			  		$( ".explain .word" ).text(word);
+					$( ".explain .pronunciation" ).text(pronunciation);
+					def_list = $( ".explain .definition" ).empty();
+					for(var i = 0; i < definitions.length; i++){
+						def_list.append("<li>" + definitions[i] + "</li>");	
+					};
+		  			$( ".explain" ).animate({top: $(window).height() - 170}, 200);
+		  		})
+
 				// $("#corrector").height($( ".explain").height());
 			}
 
 			var last_touched="";
 
 			function clear_explain(){
-				$( ".explain .word" ).empty();
-				$( ".explain .pronunciation" ).empty();
-				$( ".explain .definition" ).empty();
-			  	$( ".explain").hide();
+				$( ".explain" ).animate({top: $(window).height()}, 200)
+				// $( ".explain .word" ).empty();
+				// $( ".explain .pronunciation" ).empty();
+				// $( ".explain .definition" ).empty();
+			 //  	$( ".explain").hide();
 				// $("#corrector").height(0);
 			}
 
