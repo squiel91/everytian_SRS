@@ -103,13 +103,13 @@ nav .right-wrapper ul li {
 	}
 
 	.text .word {
-		padding-bottom: 1pt;
+		padding-bottom: 0pt;
 		font-size: 30pt;
 		margin-right: 2pt;
 	}
 
 	.text .unknown{
-		border-bottom: 3px solid #e74c3c;
+		border-bottom: 6px solid #e74c3c;
 	}
 
 

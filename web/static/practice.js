@@ -104,6 +104,7 @@ if(requested_resource_id) {
 }
 
 $('#carru').on('afterChange', function next_resource(event, slick, currentSlide){
+	clear_explain();
 	if(current_slide_index + 2 <= currentSlide){
 		$('#translate').removeClass('active');
 		$('#favorite').removeClass('active');
