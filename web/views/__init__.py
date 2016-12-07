@@ -7,5 +7,3 @@ from .favorites import favorites
 from .evolution import evolution
 from .settings import settings
 
-from .resources import resources
-

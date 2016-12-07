@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="7.9195959"
-     inkscape:cx="42.809432"
+     inkscape:cx="41.736145"
      inkscape:cy="31.051568"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -47,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -81,10 +81,10 @@
     <g
        id="g4762-3"
        transform="matrix(0.15245116,0,0,0.15245116,20.989714,938.20673)"
-       style="fill:#ffffff">
+       style="fill:#333333">
       <text
          xml:space="preserve"
-         style="font-style:normal;font-weight:normal;font-size:166.90135193px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="font-style:normal;font-weight:normal;font-size:166.90135193px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#333333;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          x="301.0611"
          y="659.32239"
          id="text3690-5"
@@ -93,9 +93,9 @@
            id="tspan3692-6"
            x="301.0611"
            y="659.32239"
-           style="font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Waree;-inkscape-font-specification:'Waree Bold Oblique';fill:#ffffff;fill-opacity:1">A</tspan></text>
+           style="font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Waree;-inkscape-font-specification:'Waree Bold Oblique';fill:#333333;fill-opacity:1">A</tspan></text>
       <path
-         style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.09555984px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         style="fill:#333333;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1.09555984px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          d="m 352.68157,511.02067 c 0,0 -42.20923,-6.32026 -66.61811,18.68636 -24.40886,25.00659 -2.74396,52.67603 -2.74396,52.67603 l -22.972,6.16154 51.60987,21.37223 25.25545,-44.23509 -26.02842,7.37522 c 0,0 -25.12094,-43.34993 41.49717,-62.03629 z"
          id="path3712-2"
          inkscape:connector-curvature="0"

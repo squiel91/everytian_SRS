@@ -2,91 +2,62 @@
 <html>
 	<head>
 		{% load static %}
+		<title>everytiān</title>
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
-		<link rel="manifest" href="{% static 'manifest.json' %}">
-		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>everytiān</title>
-		<link rel="stylesheet" type="text/css" href="{% static 'practice.css' %}">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.css"/>
+ 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.css"/>
+ 		<link rel="stylesheet" type="text/css" href="{% static 'practice.css' %}">
 	</head>
 	<body>
-		<nav>
-			<div id="top-level">
-				<ul>
-					<li class="logo">everytiān</li>
-					<li class="active"><a href="{% url 'practice' %}">Practice</a></li>
-					<li><a href="{% url 'favorites' %}">Favorites</a></li>
-					<li><a href="{% url 'evolution' %}">Evolution</a></li>
-					<li><a href="{% url 'settings' %}">Settings</a></li>
-				</ul>
-
-			</div>
-		</nav>
-		<form method="POST" action="{% url 'practice' %}">
-			{% csrf_token %}
-			<input name="resource_id" type="hidden" value="{{ resource_id }}">
-			<section class="section-actions">
-				<div id="resource-level">
+		<div class="wrapper">
+			<nav>
+				<div class="left-wrapper">
+					<select>
+						<option>Practice</option>
+						<option>Favorites</option>
+						<option>Evolution</option>
+						<option>Settings</option>
+					</select>
+				</div>
+				<div class="right-wrapper">
 					<ul>
-						<li id="sound"><img src="{% static 'speaker.png' %}"></li>
-						<li id="tweet"><a href="https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text={{ tweet }}"><img src="{% static 'twitter.png' %}"></a></li>
-						<li id="favorite"><img src="{% static 'like.png' %}"></li>
-						<input name="favorite" type="checkbox" class="hidden">
-						<li id="translate"><img src="{% static 'translation.png' %}"></li>
+						<li id="twitter"></li>
+						<li id="edit"></li>
+						<li id="ask"></li>
+						<li id="sound"></li>
+						<li id="favorite"></li>
+						<li id="translate"></li>
 					</ul>
 				</div>
-			</section>
-			<div id="translation">{{ translation }}</div>
-			<div class="text">
-				{% for word in text %}
-					<div class="word">
-						<div class="hanzi">{{ word.hanzi }}</div>
-						<input name="unknown" type="checkbox" value="{{ word.hanzi }}" class="hidden">
-						<span class="pronunciation" style="display: none;">{{ word.pinyin }}</span>
-					</div>
-				{% endfor %}
+			</nav>
+		</div>
+		<section>
+			<div class="wrapper">
+				<div id="carru" data-slick='{"slidesToShow": 1, "slidesToScroll": 2}'></div>
 			</div>
-			
-			<div class="explain-box" style="display: none;">
+		</section>
+		<section class="explain" style="display: none;">
+			<div class="wrapper">	
 				<div class="word"></div>
 				<div class="pronunciation"></div>
 				<ul class="definition"></ul>
 			</div>
-			<div>
-			<input id="next" type="submit" value="NEXT">
-			</div>
-		</form>
-		{% if audio > 0 %}
-		<audio class="hidden">
-		  <source src="https://audio.tatoeba.org/sentences/cmn/{{ audio }}.mp3" type="audio/mpeg">
-		Your browser does not support audio!
-		</audio>
-		{% endif %}
-		<div id="corrector"></div>
-		<script src="../static/jquery-3.1.1.min.js"></script>
-		<script src="../static/notify.min.js"></script>
-		<script>
-			{% autoescape off %}
-				var dict = {{ word_definitions }};
-			{% endautoescape %}
-
-			{% for learned_word in learned %}
-				$.notify("you learned {{ learned_word }}!", "success")
-			{% endfor %}
-			{% for forgotten_word in forgotten %}
-				$.notify("you forgotten {{ forgotten_word }}!", "error")
-			{% endfor %}
-			{% for discov_known_word in discov_known %}
-				$.notify("{{ discov_known_word }} added to your known dictionary", "info")
-			{% endfor %}
-			{% for discov_unknown_word in discov_unknown %}
-				$.notify("{{ discov_unknown_word }} added to your unknown dictionary", "warn")
-			{% endfor %}
-		</script>
+		</section>
+		{% csrf_token %}
+		<script   src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="{% static 'jquery.ui.touch-punch.min.js' %}"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.js"></script>
+		<script>
+			user_email = "{{ user_email }}";
+			base_url = "http://{{ request.get_host }}{% url 'api_resources' %}";
+			practice_url = "{% url 'practice' %}";
+			words_url = "http://{{ request.get_host }}{% url 'api_words' %}"
+		</script>
 		<script type="text/javascript" src="{% static 'practice.js' %}"></script>
 	</body>
 </html>
