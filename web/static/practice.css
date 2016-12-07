@@ -99,17 +99,17 @@ nav .right-wrapper ul li {
 	outline: none;
 	font-size: 30pt;
 	line-height: 45pt;
-	margin: 10pt 5pt;
+	margin: 5pt 5pt;
 	}
 
 	.text .word {
-		padding-bottom: 0pt;
+		padding-bottom: 1pt;
 		font-size: 30pt;
 		margin-right: 2pt;
 	}
 
 	.text .unknown{
-		border-bottom: 6px solid #e74c3c;
+		border-bottom: 3px solid #e74c3c;
 	}
 
 
