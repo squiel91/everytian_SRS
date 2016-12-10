@@ -35,10 +35,8 @@ import pdb
 
 	# # return best_sentence
 
-def update_knowledge(user, resource_id, unknown_word_ids):
+def update_knowledge(user, resource, unknown_word_ids):
 	feedback = defaultdict(list)
-
-	resource = Text.objects.get(pk=resource_id)
 	all_words = set(resource.text)
 	unknown_words = set(unknown_word_ids)
 
@@ -77,13 +75,15 @@ def resources(request, id):
 
 	if request.method == "GET":
 		response_json = {}
-		if "resource_id" in request.GET:
-			if request.POST.get("favorite") == "on":
+		# pdb.set_trace()
+		if  request.GET.get("resource_id"):
+			resource = Text.objects.get(pk=request.GET["resource_id"])
+			if request.GET.get("favorite"):
 				user.add_favorite(resource)
 				user.save()
 			response_json.update(update_knowledge(
 				user, 
-				request.GET["resource_id"], 
+				resource, 
 				request.POST.getlist("unknown_words[]"))
 			)
 

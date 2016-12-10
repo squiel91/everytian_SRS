@@ -2,12 +2,20 @@
 
 body {
 	margin: 0px;
+	font-family: Arial;
+}
+
+a:hover {
+   text-decoration:none;
 }
 
 .wrapper {
 	    margin-left: auto;
 	    margin-right: auto;
 	    max-width: 940px;
+	    padding-left: 5pt;
+	    padding-right: 5pt;
+
 }
 
 /* nav */
@@ -15,6 +23,7 @@ body {
 nav {
 	padding: 0pt;
 	margin: 0pt;
+	padding-top: 10pt;
 	max-height: 100px;
 	overflow: hidden;
 
@@ -22,7 +31,6 @@ nav {
 
 nav .left-wrapper {
 	float: left;
-	display: none;
 
 }
 
@@ -49,38 +57,42 @@ nav .right-wrapper ul {
 nav .right-wrapper ul li{
 }
 
-nav .right-wrapper ul li:hover, nav .right-wrapper ul li.active{
+.right-wrapper ul li:hover, nav .right-wrapper ul li.active, .favorite:hover{
 	background-position: right; 
 }
 
-nav .right-wrapper #translate {
-	background-image: url("/static/assets/translate.svg");
+.resource_action {
+	color: #bdc3c7;
+	font-size: larger;
+	margin-top: 5pt;
 }
 
-nav .right-wrapper #twitter {
+.right-wrapper #twitter {
 	background-image: url("/static/assets/twitter.svg");
 }
 
-nav .right-wrapper #favorite {
+.favorite {
 	background-image: url("/static/assets/favorite.svg");
 }
 
-nav .right-wrapper #sound {
+.right-wrapper #sound {
+	display: none;
 	background-image: url("/static/assets/sound.svg");
 }
 
-nav .right-wrapper #edit {
+.right-wrapper #edit {
+	display: none;
 	background-image: url("/static/assets/edit.svg");
 }
 
-nav .right-wrapper #ask {
+.right-wrapper #ask {
+	display: none;
 	background-image: url("/static/assets/ask.svg");
 }
 
-nav .right-wrapper ul li {
+.right-wrapper ul li, .favorite {
 	float: right;
-	height: 50px;
-	width: 50px;
+	width: 20px;
 	padding: 0px;
 	margin: 0px;
 	overflow: hidden;
@@ -99,7 +111,6 @@ nav .right-wrapper ul li {
 	outline: none;
 	font-size: 30pt;
 	line-height: 45pt;
-	margin: 5pt 5pt;
 	}
 
 	.text .word {
@@ -119,7 +130,7 @@ nav .right-wrapper ul li {
 		display: none;
 		outline: none;
 		font-size: 15pt;
-		margin: 10pt 5pt;
+		margin: 10pt 0pt;
 
 	}
 
@@ -146,6 +157,15 @@ nav .right-wrapper ul li {
 	    background-color: #bdc3c7;
 	    color: white;
 	}
+
+	textarea {
+		display: block;
+		width: 100%;
+		margin-bottom: 5pt;
+		font-size: 20pt;
+		height: 50pt;
+	}
+
 
 
 /* explain */

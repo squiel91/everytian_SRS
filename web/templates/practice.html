@@ -16,21 +16,13 @@
 		<div class="wrapper">
 			<nav>
 				<div class="left-wrapper">
-					<select>
-						<option>Practice</option>
-						<option>Favorites</option>
-						<option>Evolution</option>
-						<option>Settings</option>
-					</select>
+					<a>Practice</a>
+					<a href="{% url 'favorites' %}">Favorites</a>
+					<a href="{% url 'evolution' %}">Evolution</a>
 				</div>
 				<div class="right-wrapper">
 					<ul>
-						<li id="twitter"></li>
-						<li id="edit"></li>
-						<li id="ask"></li>
-						<li id="sound"></li>
-						<li id="favorite"></li>
-						<li id="translate"></li>
+						<li><a href="{% url 'settings' %}">⋮</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -42,6 +34,7 @@
 		</section>
 		<section class="explain" style="display: none;">
 			<div class="wrapper">	
+				<div class="favorite"></div>
 				<div class="word"></div>
 				<div class="pronunciation"></div>
 				<ul class="definition"></ul>

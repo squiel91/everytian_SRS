@@ -92,7 +92,7 @@ DATABASES = {
     }
 }
 
-RUNNING_LOCALLY = (len(sys.argv) > 1 and (sys.argv[1] == 'runserver'))  # or sys.argv[1] == 'shell'
+RUNNING_LOCALLY = (len(sys.argv) > 1 and ((sys.argv[1] == 'runserver') or (sys.argv[1] == 'shell')))
 
 from mongoengine import connect
 # import pdb

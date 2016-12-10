@@ -1,78 +1,3 @@
-// initialize menu
-
-$("nav #twitter").click(function(){
-	window.open('https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text=' + $('.text').data('string'), '_blank');
-})
-
-$("nav #edit").click(function(){
-	if($(this).hasClass('active')){ 
-		$('#finish').hide();
-		$('#continue-edition').hide();
-		$('#confirm').hide();
-		$('.slick-active').find('.text').attr('contenteditable','false');
-		$('.slick-active').find('#translation').attr('contenteditable','false');
-		$('.slick-active').find('.text').data('string', $('.slick-active').find('.text').data('backup'));
-		var words = $('.slick-active').find('.text').data('backup').split(' ');
-			show_words(words, $('.slick-active').find('.text'));
-		$(this).removeClass('active');
-	} else { 
-		clear_explain();
-		$(this).addClass('active'); 
-		$('.slick-active').find('.text').text($('.slick-active').find('.text').data('string'));  
-		$('.slick-active').find('.text').attr('contenteditable','true');  
-		$('.slick-active').find('.translation').attr('contenteditable','true'); 
-		$('#confirm').hide();
-		$('#finish').show();
-		$('#cancel').show();
-		$(this).addClass('active')
-	}
-})
-
-$("nav #sound").click(function(){
-	if($(this).hasClass('active')){ 
-		$(this).removeClass('active'); 
-		$('.slick-active').find('audio')[0].pause(); 
-		$('audio')[0].currentTime = 0;
-	} else { 
-		$(this).addClass('active'); 
-		$('.slick-active').find('audio')[0].play(); 
-		var sound_button = $(this); 
-		$('.slick-active').find('audio').on('ended', function(){ 
-			sound_button.removeClass('active');
-		});
-	};
-})
-
-$("nav #favorite").click(function(){
-	if($(this).hasClass('active')){ 
-		$(this).removeClass('active');
-		is_favorite = false;
-	} else { 
-		$(this).addClass('active')
-		is_favorite = true;
-	};
-})
-
-$("nav #translate").click(function(){
-	if(!$(this).hasClass('active')){ 
-		$('.slick-active').find('.translation').show(); 
-		$(this).addClass('active');
-	} else { 
-		$('.slick-current').find('.translation').hide(); 
-		$(this).removeClass('active');
-	};
-})
-
-$("nav #ask").click(function(){
-	if($(this).hasClass('active')){
-		$(this).removeClass('active');
-		$('.slick-active').find('#question').hide()
-	} else { 
-		$('.slick-active').find('#question').show()
-		$(this).addClass('active')     
-	};
-})
-
 // initialize global variables
 
 var dict = {};
@@ -107,12 +32,15 @@ $('#carru').on('afterChange', function next_resource(event, slick, currentSlide)
 	clear_explain();
 	if(current_slide_index + 2 <= currentSlide){
 		$('#translate').removeClass('active');
-		$('#favorite').removeClass('active');
+		$('.favorite').removeClass('active');
 		$('#sound').removeClass('active');
 		$('#ask').removeClass('active');
 		$('#edit').removeClass('active');
 		$("#carru").slick('slickRemove', 0);
 		$("#carru").slick('slickRemove', 0);
+		setTimeout( function(){ 
+			$('.slick-active').find('audio')[0].play();
+		}  , 1000 );
 		
 		window.history.replaceState("object or string", "Title", practice_url + "/" + $(".slick-current").data("id"));
 		get_next();
@@ -146,7 +74,82 @@ function get_next(resource_id) {
 		var resource = $('<div class="resource drag"></div>');
 		var sound = $('<div class="sound"></div>');
 		var text = $('<div class="text"></div>');
+		
 		var translation = $('<div class="translation"></div>');
+		translation.text(data["translation"]);
+		
+		var translate = $("<div class='resource_action translate'>⤵ translate</div>").click(function(){
+			if (translate.hasClass("active")){
+				translation.hide();
+				translate.removeClass("active");
+				translate.text("⤵ translate");
+			} else {
+				translation.show();
+				translate.addClass("active");
+				translate.text("⤴ translate");
+			}
+		});
+
+		 
+		var edit_button = $("<div class='resource_action edit_button'>✎ feedback</div>").click(function(){
+			if(edit_button.hasClass('active')){ 
+				$('#finish').hide();
+				$('#continue-edition').hide();
+				$('#confirm').hide();
+				$('.slick-active').find('.text').attr('contenteditable','false');
+				$('.slick-active').find('#translation').attr('contenteditable','false');
+				$('.slick-active').find('.text').data('string', $('.slick-active').find('.text').data('backup'));
+				var words = $('.slick-active').find('.text').data('backup').split(' ');
+					show_words(words, $('.slick-active').find('.text'));
+				edit_button.removeClass('active');
+				edit_button.text("✎ feedback");
+
+			} else { 
+				clear_explain();
+				edit_button.addClass('active'); 
+				$('.slick-active').find('.text').text($('.slick-active').find('.text').data('string'));  
+				$('.slick-active').find('.text').attr('contenteditable','true');  
+				$('.slick-active').find('.translation').attr('contenteditable','true'); 
+				$('#confirm').hide();
+				$('#finish').show();
+				$('#cancel').show();
+				edit_button.addClass('active');
+				edit_button.text("✎ cancel edition");
+			}
+		});
+
+		var sound_button = $("<div class='resource_action sound'>► sound</div>").click(function(){
+			if(sound_button.hasClass('active')){ 
+				sound_button.removeClass('active'); 
+				$('.slick-active').find('audio')[0].pause(); 
+				$('audio')[0].currentTime = 0;
+				sound_button.text("► sound");
+			} else { 
+				sound_button.addClass('active'); 
+				sound_button.text("■ stop");
+				$('.slick-active').find('audio')[0].play(); 
+				$('.slick-active').find('audio').on('ended', function(){ 
+					sound_button.removeClass('active');
+					sound_button.text("► sound");
+				});
+			};
+		});
+		
+		var favorite = $("<div class='resource_action favorite_two'>☆ favorite</div>").click(function(){
+			if($(this).hasClass('active')){ 
+				$(this).removeClass('active');
+				favorite.text("☆ favorite");
+				is_favorite = false;
+			} else { 
+				$(this).addClass('active');
+				favorite.text("★ favorite");
+				is_favorite = true;
+			};
+		});
+
+		var twitter = $("<div class='resource_action twitter'>🐦 tweet</div>").click(function(){
+			window.open('https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text=' + $('.text').data('string'), '_blank');
+		});
 
 		
 		var edit = $('<button id="continue-edition">Edit</button>').hide().click(function(evt) {
@@ -189,11 +192,8 @@ function get_next(resource_id) {
 			}, 'json');
 		});
 
-		var question = $('<div id="question"><h2>You will soon be able to ask questions to a techer!</h2></div>').hide()
-
-
-		resource.append(text).append(sound).append(translation);
-		resource.append(edit).append(finish).append(confirm).append(question);
+		resource.append(sound_button).append(text).append(sound).append(edit).append(finish).append(confirm).append(favorite).append(twitter).append(translate).append(translation);
+		resource.append(edit_button);
 
 		resource.data("id", data["id"]);
 		id_to_process.push( data["id"]);
@@ -207,9 +207,10 @@ function get_next(resource_id) {
 			}
 		}
 		show_words(data["text"], text, dict);
-		translation.text(data["translation"]);
+		sound_elem = null;
 		if(data["audio"]){
-			sound.append('<audio><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>');
+			sound_elem = $('<audio><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>')
+			sound.append(sound_elem);
 		}
 		if(added_slicks > 0){
 			
@@ -218,6 +219,12 @@ function get_next(resource_id) {
 			window.history.replaceState("object or string", "Title", practice_url + "/" + data["id"]);
 			first_resource = false;
 			get_next();
+			if(sound_elem){
+				setTimeout( function(){ 
+					$('.slick-active').find('audio')[0].play();
+				}  , 2001 );
+			}
+
 		}
 		$("#carru").slick('slickAdd', resource);
 		added_slicks += 1;

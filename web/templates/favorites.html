@@ -1,3 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>everytiān</title>
+		<style>
+			body {
+				font-family: Arial;
+			}
+		</style>
+	</head>
+	<body>
+
+		<style>
+
+			.word {
+				font-size: 30pt;
+				margin-right: 2px; 
+				display: inline;
+			}
+
+			.unknown {
+				border-bottom: 4px solid #e74c3c;
+			}
+
+			.explain-box {
+				border-top: 2px solid #bdc3c7;
+				margin-top: 5px;
+				position: fixed;
+		    	bottom: 0;
+		    	width: 100%;
+
+			}
+
+			.explain-box .pronunciation {
+				font-size: 15pt;
+			}
+
+			.explain-box .definition {
+				font-size: 13pt;
+				list-style: none;
+				margin-top: 20px;
+			    padding: 0;
+			}
+
+			.actions {
+				margin-top: 40px;
+			}
+
+			#translation {
+				display: none;
+				font-size: 15pt;
+				margin-top: 15pt;
+				margin-bottom: 15pt;
+			}
+
+			nav ul {
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+			}
+
+			nav ul li {
+				margin: 5px;
+				padding: 5px;
+				display: inline;
+			}
+
+			.section-actions ul {
+				list-style-type: none;
+				padding: 0px;
+				margin: 0px;
+				margin-top: 10px;
+			}
+
+			.section-actions ul li {
+				margin: 5px;
+				padding: 5px;
+				display: inline;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+		</style>
+
+		<nav>
+			<div id="top-level">
+				<ul>
+					<li>everytiān</li>
+					<li><a href="{% url 'practice' %}">Practice</a></li>
+					<li><a>Favorites</a></li>
+					<li><a href="{% url 'evolution' %}">Evolution</a></li>
+					<li><a href="{% url 'settings' %}">Settings</a></li>
+				</ul>
+
+			</div>
+		</nav>  
 <h1>Favorites</h1>
 
 {% for favorite in favorites %}
@@ -9,3 +108,5 @@
 	<div class="pronunciation"></div>
 	<ul class="definition"></ul>
 </section>
+</body>
+</html>

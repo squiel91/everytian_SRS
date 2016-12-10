@@ -22,10 +22,34 @@ class Word(Document):
 			return serialized
 		return None
 
+class Answer(EmbeddedDocument):
+	user_email =  StringField(required=True)
+	text = StringField(required=True)
+
+	def serialize(self):
+		serialized = {}
+		serialized["user_email"] = self.user_email
+		serialized["text"] = self.text
+		return serialized
+
+class Question(EmbeddedDocument):
+	user_email = StringField(required=True)
+	text = StringField(required=True)
+	answers = ListField(EmbeddedDocumentField(Answer), default=list)
+
+	def serialize(self):
+		serialized = {}
+		serialized["user_email"] = self.user_email
+		serialized["text"] = self.text
+		serialized["answers"] = [a.serialize() for a in self.answers]
+		return serialized
+
+
 class Text(Document):
 	text = ListField(StringField(), required=True)
 	translation = StringField()
 	audio = IntField()
+	questions = ListField(EmbeddedDocumentField(Question), default=list)
 
 	def __str__(self):
 		return "".join(self.text)
@@ -56,9 +80,11 @@ class Text(Document):
 		serialized["translation"] = self.translation
 		serialized["audio"] = self.audio
 		serialized["words"] = [word.serialize() for word in self.definitions()]
+		serialized["questions"] = [question.serialize() for question in self.questions]
 		return serialized
 
 	def update(self):
+		# doesnt update questions nor answers
 		serialized = {}
 		serialized["text"] = self.text
 		serialized["translation"] = self.translation
