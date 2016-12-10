@@ -39,8 +39,8 @@ $('#carru').on('afterChange', function next_resource(event, slick, currentSlide)
 		$("#carru").slick('slickRemove', 0);
 		$("#carru").slick('slickRemove', 0);
 		setTimeout( function(){ 
-			$('.sound_two').click();
-		}  , 500 );
+			$('.slick-active').find('.sound_two').click();
+		}  , 2000 );
 		
 		window.history.replaceState("object or string", "Title", practice_url + "/" + $(".slick-current").find('.resource').data("id"));
 		get_next();
@@ -225,7 +225,6 @@ function get_next(resource_id) {
 			get_next();
 			if(sound_elem){
 				setTimeout( function(){ 
-
 					sound_button.click();
 				}  , 2000 );
 			}
