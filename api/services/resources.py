@@ -78,7 +78,8 @@ def resources(request, id):
 		# pdb.set_trace()
 		if  request.GET.get("resource_id"):
 			resource = Text.objects.get(pk=request.GET["resource_id"])
-			if request.GET.get("favorite"):
+			# pdb.set_trace()
+			if request.GET.get("favorite") and request.GET.get("favorite") == 'true':
 				user.add_favorite(resource)
 				user.save()
 			response_json.update(update_knowledge(

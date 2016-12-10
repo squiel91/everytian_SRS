@@ -39,10 +39,10 @@ $('#carru').on('afterChange', function next_resource(event, slick, currentSlide)
 		$("#carru").slick('slickRemove', 0);
 		$("#carru").slick('slickRemove', 0);
 		setTimeout( function(){ 
-			$('.slick-active').find('audio')[0].play();
-		}  , 1000 );
+			$('.sound_two').click();
+		}  , 500 );
 		
-		window.history.replaceState("object or string", "Title", practice_url + "/" + $(".slick-current").data("id"));
+		window.history.replaceState("object or string", "Title", practice_url + "/" + $(".slick-current").find('.resource').data("id"));
 		get_next();
 	}
 });
@@ -78,7 +78,7 @@ function get_next(resource_id) {
 		var translation = $('<div class="translation"></div>');
 		translation.text(data["translation"]);
 		
-		var translate = $("<div class='resource_action translate'>⤵ translate</div>").click(function(){
+		var translate = $("<div class='resource_action translate_two'>⤵ translate</div>").click(function(){
 			if (translate.hasClass("active")){
 				translation.hide();
 				translate.removeClass("active");
@@ -91,7 +91,7 @@ function get_next(resource_id) {
 		});
 
 		 
-		var edit_button = $("<div class='resource_action edit_button'>✎ feedback</div>").click(function(){
+		var edit_button = $("<div class='resource_action edit_two'>✎ feedback</div>").click(function(){
 			if(edit_button.hasClass('active')){ 
 				$('#finish').hide();
 				$('#continue-edition').hide();
@@ -118,7 +118,7 @@ function get_next(resource_id) {
 			}
 		});
 
-		var sound_button = $("<div class='resource_action sound'>► sound</div>").click(function(){
+		var sound_button = $("<div class='resource_action sound_two'>► sound</div>").click(function(){
 			if(sound_button.hasClass('active')){ 
 				sound_button.removeClass('active'); 
 				$('.slick-active').find('audio')[0].pause(); 
@@ -147,7 +147,7 @@ function get_next(resource_id) {
 			};
 		});
 
-		var twitter = $("<div class='resource_action twitter'>🐦 tweet</div>").click(function(){
+		var twitter = $("<div class='resource_action twitter_two'>🐦 tweet</div>").click(function(){
 			window.open('https://twitter.com/intent/tweet?url=http://everytian.com&hashtags=chinese&text=' + $('.text').data('string'), '_blank');
 		});
 
@@ -192,8 +192,10 @@ function get_next(resource_id) {
 			}, 'json');
 		});
 
-		resource.append(sound_button).append(text).append(sound).append(edit).append(finish).append(confirm).append(favorite).append(twitter).append(translate).append(translation);
-		resource.append(edit_button);
+		header_actions = $('<div class="header_actions"></div>').append(favorite).append(twitter);
+		bottom_actions = $('<div class="header_actions"></div>').append(translate).append(sound_button);
+
+		resource.append(header_actions).append(text).append(sound).append(edit).append(finish).append(confirm).append(bottom_actions).append(translation).append(edit_button);
 
 		resource.data("id", data["id"]);
 		id_to_process.push( data["id"]);
@@ -209,29 +211,33 @@ function get_next(resource_id) {
 		show_words(data["text"], text, dict);
 		sound_elem = null;
 		if(data["audio"]){
-			sound_elem = $('<audio><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>')
+			sound_elem = $('<audio preload="auto"><source src="https://audio.tatoeba.org/sentences/cmn/' + data["audio"] + '.mp3" type="audio/mpeg">Your browser does not support audio!</audio>')
 			sound.append(sound_elem);
 		}
 		if(added_slicks > 0){
 			
 		}
 		if(first_resource){
-			window.history.replaceState("object or string", "Title", practice_url + "/" + data["id"]);
+			if(data["id"]){
+				window.history.replaceState("object or string", "Title", practice_url + "/" + data["id"]);
+			}
 			first_resource = false;
 			get_next();
 			if(sound_elem){
 				setTimeout( function(){ 
-					$('.slick-active').find('audio')[0].play();
-				}  , 2001 );
+
+					sound_button.click();
+				}  , 2000 );
 			}
 
 		}
-		$("#carru").slick('slickAdd', resource);
+		resource_container = $('<div></div>').append(resource);
+		$("#carru").slick('slickAdd', resource_container);
 		added_slicks += 1;
 		$("#carru").slick('slickAdd', "<div></div>");
 		added_slicks += 1;
 
-		resource.css("min-height", $(window).height() - $('nav').height());
+		resource.css("min-height", $(window).height() - 40 - $('nav').height());
 	}, 'json');
 }
 
@@ -280,7 +286,8 @@ function explain(word, pronunciation, definitions){
 var last_touched="";
 
 function clear_explain(){
-	$( ".explain" ).animate({top: $(window).height()}, 200)
+	$( ".explain" ).animate({top: $(window).height()}, 200, function(){$(this).hide();})
+
 }
 
 function on_word_click(event) {

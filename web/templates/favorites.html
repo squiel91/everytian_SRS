@@ -2,6 +2,11 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>everytiān</title>
 		<style>
 			body {
@@ -13,6 +18,10 @@
 
 		<style>
 
+			.text {
+				font-size: 30pt;
+				margin-bottom: 20pt;
+			}
 			.word {
 				font-size: 30pt;
 				margin-right: 2px; 
@@ -88,7 +97,6 @@
 		<nav>
 			<div id="top-level">
 				<ul>
-					<li>everytiān</li>
 					<li><a href="{% url 'practice' %}">Practice</a></li>
 					<li><a>Favorites</a></li>
 					<li><a href="{% url 'evolution' %}">Evolution</a></li>

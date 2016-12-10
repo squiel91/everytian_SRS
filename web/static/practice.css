@@ -9,23 +9,45 @@ a:hover {
    text-decoration:none;
 }
 
+a[href] {
+	color: #e74c3c;
+	text-decoration: none;
+}
+
 .wrapper {
 	    margin-left: auto;
 	    margin-right: auto;
 	    max-width: 940px;
-	    padding-left: 5pt;
-	    padding-right: 5pt;
+}
 
+.header_actions{
+	height: 30pt;
+}
+
+.favorite_two, .sound_two {
+	float: right;
+
+}
+
+.favorite_two {
+	margin-left: 5pt;
+}
+
+.translate_two, .twitter_two {
+	float: left;
 }
 
 /* nav */
 
 nav {
-	padding: 0pt;
+	padding: 0pt 5pt;
 	margin: 0pt;
 	padding-top: 10pt;
+	padding-bottom: 7pt;
+	margin-bottom: 9pt;
 	max-height: 100px;
 	overflow: hidden;
+	border-bottom: 1px solid gray;
 
 }
 
@@ -62,7 +84,7 @@ nav .right-wrapper ul li{
 }
 
 .resource_action {
-	color: #bdc3c7;
+	color: #e74c3c;
 	font-size: larger;
 	margin-top: 5pt;
 }
@@ -100,6 +122,9 @@ nav .right-wrapper ul li{
 
 /* resource */
 
+.resource {
+	margin: 0px 5pt;
+}
 .drag {
 	outline: none;
 	border: none;
@@ -111,6 +136,8 @@ nav .right-wrapper ul li{
 	outline: none;
 	font-size: 30pt;
 	line-height: 45pt;
+	position: relative;
+    top: -5pt;
 	}
 
 	.text .word {

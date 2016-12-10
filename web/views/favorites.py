@@ -7,4 +7,4 @@ def favorites(request):
 	user = User.objects.get(pk=request.session['email'])
 	# pdb.set_trace()
 	return render(request, 'favorites.html', 
-		{"favorites": ["".join(fav.text) for fav in user.favorite_resources]})
+		{"favorites": list(reversed(["".join(fav.text) for fav in user.favorite_resources]))})
