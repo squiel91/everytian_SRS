@@ -47,6 +47,10 @@ $('#carru').on('afterChange', function next_resource(event, slick, currentSlide)
 	}
 });
 
+function add_word(word) {
+	dict[word['hanzi']] = word
+}
+
 function get_next(resource_id) {
 	request_url = base_url;
 	
@@ -203,10 +207,7 @@ function get_next(resource_id) {
 		text.data("backup", data["text"].join(" "));
 		words = data["words"];
 		for(i in words){
-			dict[words[i]['hanzi']] = {
-				'pronunciation': words[i]['pinyin'],
-				'definitions': words[i]['definitions']
-			}
+			add_word(words[i]);
 		}
 		show_words(data["text"], text, dict);
 		sound_elem = null;
@@ -269,15 +270,35 @@ function get_definitions(words, dictionary){
 
 // Explain
 
-function explain(word, pronunciation, definitions){
-	$( ".explain" ).animate({top: $(window).height()}, 200, function(){
-		$( ".explain" ).show()
-		$( ".explain .word" ).text(word);
-	$( ".explain .pronunciation" ).text(pronunciation);
-	def_list = $( ".explain .definition" ).empty();
+function show_explanation(word, place){
+	var hanzi = $('<div class="word">' + word['hanzi']+ '</div>');
+	var pronunciation = $('<div class="pronunciation">' + word['pinyin']+ '</div>');
+	var definition = $('<ul class="definition"></ul>');
+	definitions = word['definitions'];
 	for(var i = 0; i < definitions.length; i++){
-		def_list.append("<li>" + definitions[i] + "</li>"); 
-	};
+		definition.append("<li>" + definitions[i] + "</li>"); 
+	};			
+		// if (word_explanation["composed_by"].length > 0){
+	// 	var composed = [];
+	// 	for (var i = 0; i < word_explanation["composed_by"].length; i++){
+	// 		composed.push(word_explanation["composed_by"][i]['hanzi'])
+	// 	}
+	// 	def_list.append("<li>Composed by: " + composed.join('|') + "</li>");
+	// }
+	place.append(hanzi).append(pronunciation).append(definition);
+
+}
+
+function explain(word){
+	$( ".explain" ).animate({top: $(window).height()}, 200, function(){
+		var explanation_box = $(".explain .wrapper");
+		explanation_box.empty();
+		var dict_word = dict[word];
+		show_explanation(dict[word], explanation_box);
+		for (var i = 0; i < dict_word["composed_by"].length; i++){
+			show_explanation(dict_word["composed_by"][i], explanation_box);
+		}
+		$( ".explain" ).show()
 		$( ".explain" ).animate({top: $(window).height() - 170}, 200);
 	})
 }
@@ -300,14 +321,14 @@ function on_word_click(event) {
 				clear_explain();
 			} else {
 				word_dict = dict[touched_word];
-				explain(touched_word, word_dict["pronunciation"], word_dict["definitions"]);
+				explain(touched_word);
 				$(this).addClass( "unknown" );
 				unknown_words[touched_word] = true;
 				console.log(unknown_words); 
 			}
 		} else {
 			word_dict = dict[touched_word];
-			explain(touched_word, word_dict["pronunciation"], word_dict["definitions"]);
+			explain(touched_word);
 			if (!$(this).hasClass("unknown")){
 				$(this).addClass("unknown");
 				unknown_words[touched_word] = true;

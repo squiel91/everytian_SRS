@@ -9,9 +9,19 @@ class Word(Document):
 	hanzi = StringField(primary_key=True, required=True, max_length=50, unique=True)
 	pinyin = StringField(max_length=200)
 	definitions = ListField(StringField(), default=list)
+	composed_by = ListField(StringField(), default=list)
 
 	def __str__(self):
 		return self.hanzi
+
+	def composed_by_definitions(self):
+		list_words = list()
+		for word_text in self.composed_by:
+			try:
+				list_words.append(Word.objects.get(pk=word_text).serialize())
+			except Word.DoesNotExist:
+				pass
+		return list_words
 
 	def serialize(self):
 		if self.pinyin:
@@ -19,6 +29,7 @@ class Word(Document):
 			serialized["hanzi"] = self.hanzi
 			serialized["pinyin"] = self.pinyin
 			serialized["definitions"] = self.definitions
+			serialized["composed_by"] = self.composed_by_definitions()
 			return serialized
 		return None
 
