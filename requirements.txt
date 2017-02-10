@@ -4,3 +4,4 @@ gunicorn==19.4.5
 mongoengine==0.10.6
 pymongo==3.3.1
 whitenoise==2.0.6
+PyLaTeX==1.1.1
