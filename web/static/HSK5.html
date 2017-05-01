@@ -7,20 +7,63 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="UTF-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<style>
+			body {
+				font-family: arial;
+				font-size: 14pt;
+				padding: 2%;
+			}
+
+			.word {
+				text-align: left;
+			}
+
+			#hanzi {
+				font-size: 30pt;
+			}
+
+			#pinyin {
+				font-size: 20pt;
+			}
+
+			#difficulty {
+				color: gray;
+			}
+
+			label {
+				color: gray;
+			}
+
+			.detail {
+				margin-bottom: 5pt;
+			}
+
+			button.main {
+				height: 30pt;
+				width: 100%;
+				margin: 0pt;
+				margin-top: 10pt;
+			}
+
+			#word_board {
+				border: 1px dashed #3498db;
+				width: 98%;
+				min-height: 75%;
+				padding: 5pt;
+				text-align: center;
+			}
+
+	</style>
 	</head>
 	<body>
 		<div id="word_board"></div>
-		<button class="main" onclick="learn();">Learn New</button>
-		<button class="main" onclick="revise();">Revise</button>
-		<div id="review">You have 0 words to review.</div>
-		<div id="learning"></div>
-		<textarea id="debug"></textarea>
-		<button onclick="eval($('#debug').val());">Eval</button>
+		<button class="main" onclick="revise();">Review <span id="review"></span></button>
+		<button class="main" onclick="learn();">Learn <span id="learning"></span></button>
 	</body>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 	<script>
-
+		try {
 		class Word {
 			constructor(word_json){
 				if (typeof(word_json) == 'string') {
@@ -59,6 +102,10 @@
 				localStorage.setItem(this.hanzi, JSON.stringify(this.deconstruct()));
 			}
 
+			static load(hanzi){
+				return new Word(localStorage.getItem(hanzi));
+			}
+
 			present() {
 
 				var container = $('<div class="word"><div id="hanzi" class="detail">' + 
@@ -74,7 +121,7 @@
 				
 				var list_examples = $('<ul id="examples" class="detail"></ul>');
 				var examples = shuffle(this.examples).slice(0, 5);
-				$.each(examples, function(index, example){
+				$.each(examples, function(index, example) {
 					list_examples.append($('<li>' + example + '</li>'));
 				});
 				container.append(list_examples);
@@ -96,7 +143,7 @@
 				}
 				this.last_appeared = Date.now();
 				this.save();
-				return this.last_appeared + this.interval - Date.now()
+				return this.last_appeared + this.interval - Date.now();
 			}
 
 
@@ -122,7 +169,7 @@
 				var input = $('<input type="text">').keyup(function (evt) {
 					var code = evt.keyCode || evt.which;
 					if($(evt.target).val() == actual_word.hanzi || code == 13) { //Enter keycode
-						check.click()
+						check.click();
  					}
 				});
 
@@ -139,14 +186,14 @@
 				});
 
 				this.save();
-				var input_container = $("<div class='input_container'></div>")
-				container.append(input_container.append(input, check))
-				input.focus()
+				var input_container = $("<div class='input_container'></div>");
+				container.append(input_container.append(input, check));
+				input.focus();
 				return container;
 			}
 
 			learning() {
-				return !("undefined" === typeof this.last_appeared)
+				return !("undefined" === typeof this.last_appeared);
 			}
 
 			reviewing_in(){
@@ -185,18 +232,18 @@
   		var reviewing_or_learning = false;
 
 		for(var hanzi in localStorage) {
-			var retrived_word = new Word(localStorage.getItem(hanzi));
+			var retrived_word = Word.load(hanzi);
 			words[hanzi] = retrived_word;
 			if (retrived_word.learning()){
 				learning.push(retrived_word);
 			} else {
 				not_learning.push(retrived_word);
 			}
-			$('#learning').text('You are learning ' + learning.length + ' words.')
+			$('#learning').text('(' + learning.length + ')');
 			not_learning.sort(function(a, b) {return a.difficulty - b.difficulty});
   		}
 
-  		revise()
+  		revise();
 		setTimeout(how_many_revise, 5000);
 
 
@@ -227,9 +274,11 @@
 			if (word){
 				$("#word_board").append(word.present());
 				learning.push(word);
-				$('#learning').text('You are learning ' + learning.length + ' words.');
+				word.interval = this.interval = 5 * 1000;
+				word.save();
+				$('#learning').text('(' + learning.length + ')');
 			} else {
-				$("#word_board").text("No more words to learn!")
+				$("#word_board").text("No more words to learn!");
 			}
   		}
 
@@ -241,7 +290,7 @@
   				}
   			});
 
-  			$("#review").text("You have " + to_review + " words to review.");
+  			$("#review").text("(" + to_review + ")");
 
   			setTimeout(how_many_revise, 5000);
 		}
@@ -263,16 +312,16 @@
   				}
   			});
 
-  			$("#review").text("You have " + to_review + " words to review.");
+  			$("#review").text("(" + to_review + ")");
 
   			var word = most_suitable;
   			if (word) {
-  				reviewing_or_learning = true
+  				reviewing_or_learning = true;
 	  			$("#word_board").empty();
 				$("#word_board").append(word.excercise());
   			} else {
-  				reviewing_or_learning = false
-  				$("#word_board").text("Congratulations! No more words to review for now.")
+  				reviewing_or_learning = false;
+  				$("#word_board").text("No more words to review for now.");
   			}
   		}
 
@@ -381,36 +430,9 @@
 			car = car.replace(/eì/g, "èi"); 
 			return car;
 		}
+		}
+catch(err) {
+    alert(err.message);
+}
 	</script>
-	<style>
-		body {
-			font-family: arial;
-		}
-
-		#hanzi {
-			font-size: 30pt;
-		}
-
-		#pinyin {
-			font-size: 20pt;
-		}
-
-		#difficulty {
-			color: gray;
-		}
-
-		label {
-			color: gray;
-		}
-
-		.detail {
-			margin-bottom: 5pt;
-		}
-
-		button.main {
-			margin-top: 10pt;
-			height: 30pt;
-			width: 70pt;
-		}
-	</style>
 </html>
