@@ -11,6 +11,11 @@ urlpatterns = [
         name="favicon"
     ),
     url(r'^api/', include('api.urls'), name="domain_host"),
-    url(r'^', include('web.urls'))
+    url(r'^', RedirectView.as_view(
+            url=staticfiles_storage.url('HSK5.html'),
+            permanent=False),
+        name="HSK5"
+    )
+    # url(r'^', include('web.urls'))
 
 ]
