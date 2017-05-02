@@ -247,8 +247,9 @@
 		}
 
 		function initialize() {
-			store.each( function (hanzi, word) {
-				if (word && word.hanzi) {
+			store.each( function (word_json, hanzi) {
+				if (word_json && word_json.hanzi) {
+					word = new Word(word_json);
 					words[hanzi] = word;
 					if (word.learning()){
 						learning.push(word);
@@ -256,7 +257,7 @@
 						not_learning.push(word);
 					}
 				}
-			}
+			});
 
 			$('#learning').text('(' + learning.length + ')');
 			not_learning.sort(function(a, b) {return a.difficulty - b.difficulty});
