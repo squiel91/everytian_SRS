@@ -72,7 +72,7 @@
 				this.hanzi = word_json.hanzi;
 				this.pinyin = numlat(word_json.pinyin);
 				this.traditional = word_json.traditional;
-				this.translations = word_json.translations || [];
+				this.translations = word_json.translations || word_json.definition || [] ;
 				this.examples = word_json.examples || [];
 				this.difficulty = word_json.difficulty;
 				this.hsk = word_json.hsk || 0;
@@ -80,6 +80,8 @@
 				// SR
 				this.last_appeared = word_json.last_appeared;
 				this.interval = word_json.interval;
+				this.right = word_json.right || 0; 
+				this.wrong = word_json.wrong || 0;
 			}
 
 			deconstruct(){
@@ -95,6 +97,8 @@
 					// SR 
 					"last_appeared": this.last_appeared,
 					"interval": this.interval,
+					"right": this.right,
+					"wrong": this.wrong
 				}
 			}
 
@@ -103,7 +107,10 @@
 			}
 
 			static load(hanzi){
-				return new Word(localStorage.getItem(hanzi));
+				var word_json = JSON.parse(localStorage.getItem(hanzi));
+				if (word_json && word_json.hanzi) {
+					return new Word(word_json);
+				}
 			}
 
 			present() {
@@ -138,8 +145,10 @@
 				} 
 				if (correct) {
 					this.interval *= 10;
+					this.right += 1; 
 				} else {
 					this.interval = 5 * 1000;
+					this.wrong += 1; 
 				}
 				this.last_appeared = Date.now();
 				this.save();
@@ -233,15 +242,17 @@
 
 		for(var hanzi in localStorage) {
 			var retrived_word = Word.load(hanzi);
-			words[hanzi] = retrived_word;
-			if (retrived_word.learning()){
-				learning.push(retrived_word);
-			} else {
-				not_learning.push(retrived_word);
+			if (retrived_word) {
+				words[hanzi] = retrived_word;
+				if (retrived_word.learning()){
+					learning.push(retrived_word);
+				} else {
+					not_learning.push(retrived_word);
+				}
 			}
-			$('#learning').text('(' + learning.length + ')');
-			not_learning.sort(function(a, b) {return a.difficulty - b.difficulty});
   		}
+		$('#learning').text('(' + learning.length + ')');
+		not_learning.sort(function(a, b) {return a.difficulty - b.difficulty});
 
   		revise();
 		setTimeout(how_many_revise, 5000);
@@ -251,7 +262,6 @@
 		$.getJSON("http://www.everytian.com/static/words.json", function(words_json) {
 			$.each(words_json, function(index, word_json) {
 				if (refresh  || !words[word_json.hanzi]) {
-					word_json["translations"] = word_json["definition"];
 					var word = new Word(word_json);
 					words[word.hanzi] = word;
 					localStorage.setItem(word.hanzi, JSON.stringify(word.deconstruct()));
@@ -432,7 +442,7 @@
 		}
 		}
 catch(err) {
-    alert(err.message);
+    alert(err.stack);
 }
 	</script>
 </html>
