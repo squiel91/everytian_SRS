@@ -62,7 +62,17 @@
 	</body>
 
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+	<script src="http://www.everytian.com/static/store.legacy.min.js"></script>
 	<script>
+		init()
+		function init() {
+			if (!store.enabled) {
+				alert('Local storage is not supported by your browser. Please disable "Private Mode", or upgrade to a modern browser.')
+				return
+			}
+			var user = store.get('user')
+			// ... and so on ...
+		}
 		try {
 		class Word {
 			constructor(word_json){
@@ -103,11 +113,11 @@
 			}
 
 			save(){
-				localStorage.setItem(this.hanzi, JSON.stringify(this.deconstruct()));
+				store.set(this.hanzi, this.deconstruct());
 			}
 
 			static load(hanzi){
-				var word_json = JSON.parse(localStorage.getItem(hanzi));
+				var word_json = store.get(hanzi);
 				if (word_json && word_json.hanzi) {
 					return new Word(word_json);
 				}
@@ -237,14 +247,13 @@
 		}
 
 		function initialize() {
-			for(var hanzi in localStorage) {
-				var retrived_word = Word.load(hanzi);
-				if (retrived_word) {
-					words[hanzi] = retrived_word;
-					if (retrived_word.learning()){
-						learning.push(retrived_word);
+			store.each( function (hanzi, word) {
+				if (word && word.hanzi) {
+					words[hanzi] = word;
+					if (word.learning()){
+						learning.push(word);
 					} else {
-						not_learning.push(retrived_word);
+						not_learning.push(word);
 					}
 				}
 			}
